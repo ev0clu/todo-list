@@ -15,7 +15,41 @@
         <header>
             <h1>Todo List</h1>
         </header>
-        <main></main>
+        <main>
+            <nav id="nav-bar">
+                <div id="nav-top">
+                    <div id="nav-inbox" class="nav-item">
+                        <img src="./img/inbox.png" alt="inbox" />Inbox
+                    </div>
+                    <div id="nav-today" class="nav-item">
+                        <img src="./img/today.png" alt="inbox" />Today
+                    </div>
+                    <div id="nav-week" class="nav-item">
+                        <img src="./img/week.png" alt="inbox" />This week
+                    </div>
+                </div>
+                <div id="nav-bottom">
+                    <h1>Projects</h1>
+                    <ul id="project-field"></ul>
+                    <div id="btn-new-item-container">
+                        <button id="btn-new-item" class="btn-new-project">
+                            <span class="material-symbols-outlined">add</span>
+                        </button>
+                    </div>
+                    <div id="project-modal-container"></div>
+                </div>
+            </nav>
+            <div id="task-content">
+                <h1>Task</h1>
+                <ul id="task-field"></ul>
+                <div id="btn-new-item-container">
+                    <button id="btn-new-item" class="btn-new-task">
+                        <span class="material-symbols-outlined">add</span>
+                    </button>
+                </div>
+                <div id="task-modal-container"></div>
+            </div>
+        </main>
         <footer>
             <p>
                 Copyright © Laszlo Kis
