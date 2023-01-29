@@ -56,7 +56,7 @@ const ui = (() => {
 
     const removeProjectModal = () => {
         const projectModalContainer = document.getElementById('project-modal-container');
-        const newProjectButton = document.querySelector('.btn-new-project');
+        const newProjectButton = document.querySelector('#btn-new-project');
         projectModalContainer.textContent = '';
         newProjectButton.style.display = 'block';
     };
@@ -66,7 +66,7 @@ const ui = (() => {
         projectItem.classList.add('project-item');
 
         const buttonProjectItemLeft = document.createElement('button');
-        buttonProjectItemLeft.id = 'project-item-left';
+        buttonProjectItemLeft.classList.add('project-item-left');
 
         const projectItemIcon = document.createElement('span');
         projectItemIcon.classList.add('material-symbols-outlined');
@@ -76,12 +76,11 @@ const ui = (() => {
         projectName.textContent = project.getName();
 
         const buttonProjectItemRight = document.createElement('button');
-        buttonProjectItemRight.id = 'project-item-right';
+        buttonProjectItemRight.classList.add('project-item-right');
+        buttonProjectItemRight.setAttribute('data-index', `${index}`);
 
         const projectRemoveIcon = document.createElement('span');
         projectRemoveIcon.classList.add('material-symbols-outlined');
-        projectRemoveIcon.classList.add('delete-project-icon');
-        projectRemoveIcon.setAttribute('data-index', `${index}`);
         projectRemoveIcon.textContent = 'delete';
 
         buttonProjectItemLeft.append(projectItemIcon, projectName);
@@ -99,12 +98,19 @@ const ui = (() => {
         });
     };
 
+    const removeProjectSelection = (projectList) => {
+        projectList.forEach((item) => {
+            item.classList.remove('item-selected');
+        });
+    };
+
     return {
         errorMsgProjectExist,
         errorMsgProjectFieldEmpty,
         createProjectModal,
         removeProjectModal,
-        updateProjectList
+        updateProjectList,
+        removeProjectSelection
     };
 })();
 
