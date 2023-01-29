@@ -1,0 +1,37 @@
+{
+    "name": "todo-list",
+    "version": "1.0.0",
+    "description": "",
+    "private": true,
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "watch": "webpack --watch",
+        "build": "webpack"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ev0clu/todo-list.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/ev0clu/todo-list/issues"
+    },
+    "homepage": "https://github.com/ev0clu/todo-list#readme",
+    "devDependencies": {
+        "css-loader": "^6.7.3",
+        "eslint": "^8.32.0",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-config-prettier": "^8.6.0",
+        "eslint-plugin-import": "^2.27.5",
+        "eslint-plugin-prettier": "^4.2.1",
+        "prettier": "2.8.3",
+        "style-loader": "^3.3.1",
+        "webpack": "^5.75.0",
+        "webpack-cli": "^5.0.1"
+    },
+    "dependencies": {
+        "date-fns": "^2.29.3"
+    }
+}
