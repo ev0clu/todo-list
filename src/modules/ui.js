@@ -1,10 +1,32 @@
 const ui = (() => {
-    const createTextInput = (inputID) => {
-        const projectInput = document.createElement('input');
-        projectInput.type = 'text';
-        projectInput.id = inputID;
+    // General UI
+    const createLabel = (inputID, text) => {
+        const label = document.createElement('label');
+        label.for = inputID;
+        label.textContent = text;
 
-        return projectInput;
+        return label;
+    };
+
+    const createInput = (inputID, type, isRequired) => {
+        const input = document.createElement('input');
+        input.type = type;
+        input.id = inputID;
+        input.name = inputID;
+        input.required = isRequired;
+
+        return input;
+    };
+
+    const createTextArea = (name, id, rows, cols, resize) => {
+        const textArea = document.createElement('textarea');
+        textArea.name = name;
+        textArea.id = id;
+        textArea.rows = rows;
+        textArea.cols = cols;
+        textArea.style.resize = resize;
+
+        return textArea;
     };
 
     const createErrorField = (errorID) => {
@@ -12,16 +34,6 @@ const ui = (() => {
         errorParagraph.id = errorID;
 
         return errorParagraph;
-    };
-
-    const errorMsgProjectExist = () => {
-        const errorMsg = document.getElementById('project-warning');
-        errorMsg.textContent = 'Project already exist';
-    };
-
-    const errorMsgProjectFieldEmpty = () => {
-        const errorMsg = document.getElementById('project-warning');
-        errorMsg.textContent = 'Project name is missing';
     };
 
     const createAddButton = (buttonID) => {
@@ -40,6 +52,17 @@ const ui = (() => {
         return cancelButton;
     };
 
+    // Project UI
+    const errorMsgProjectExist = () => {
+        const errorMsg = document.getElementById('project-warning');
+        errorMsg.textContent = 'Project already exist';
+    };
+
+    const errorMsgProjectFieldEmpty = () => {
+        const errorMsg = document.getElementById('project-warning');
+        errorMsg.textContent = 'Project name is missing';
+    };
+
     const createProjectModal = () => {
         const projectModalDiv = document.getElementById('project-modal-container');
 
@@ -49,14 +72,14 @@ const ui = (() => {
         buttonDiv.appendChild(createAddButton('btn-add-project'));
         buttonDiv.appendChild(createCancelButton('btn-cancel-project'));
 
-        projectModalDiv.appendChild(createTextInput('project-name-input'));
+        projectModalDiv.appendChild(createInput('project-name-input', 'text', true));
         projectModalDiv.appendChild(createErrorField('project-warning'));
         projectModalDiv.appendChild(buttonDiv);
     };
 
     const removeProjectModal = () => {
         const projectModalContainer = document.getElementById('project-modal-container');
-        const newProjectButton = document.querySelector('#btn-new-project');
+        const newProjectButton = document.getElementById('btn-new-project');
         projectModalContainer.textContent = '';
         newProjectButton.style.display = 'block';
     };
@@ -104,13 +127,101 @@ const ui = (() => {
         });
     };
 
+    // Task UI
+    const addTaskHeaderText = (projectName) => {
+        const taskContent = document.getElementById('task-content');
+        taskContent.children[0].textContent = projectName;
+    };
+
+    const createTaskModal = () => {
+        const taskModalContainer = document.getElementById('task-modal-container');
+
+        const taskModalDiv = document.createElement('form');
+        taskModalDiv.id = 'task-modal';
+
+        const titleDiv = document.createElement('div');
+        titleDiv.classList.add('task-modal-input');
+        titleDiv.appendChild(createLabel('task-title-input', 'Title*'));
+        const title = createInput('task-title-input', 'text', true);
+        titleDiv.appendChild(title);
+
+        const descriptionDiv = document.createElement('div');
+        descriptionDiv.classList.add('task-modal-input');
+
+        const descriptionLable = createLabel('task-description-input', 'Description');
+        const descriptionSpan = document.createElement('span');
+        descriptionSpan.classList.add('description-input-sublabel');
+        descriptionSpan.textContent = ' (optional)';
+        descriptionLable.appendChild(descriptionSpan);
+
+        descriptionDiv.appendChild(descriptionLable);
+        descriptionDiv.appendChild(
+            createTextArea('task-description-input', 'task-description-input', '3', '30', 'none')
+        );
+
+        const dueDateDiv = document.createElement('div');
+        dueDateDiv.classList.add('task-modal-input');
+        dueDateDiv.appendChild(createLabel('task-due-date-input', 'Due Date*'));
+        dueDateDiv.appendChild(createInput('task-due-date-input', 'date', true));
+
+        const priorityLowDiv = document.createElement('div');
+        priorityLowDiv.appendChild(createInput('task-priority', 'radio', true));
+        priorityLowDiv.appendChild(createLabel('task-priority', 'Low'));
+
+        const priorityMediumDiv = document.createElement('div');
+        priorityMediumDiv.appendChild(createInput('task-priority', 'radio', true));
+        priorityMediumDiv.appendChild(createLabel('task-priority', 'Medium'));
+
+        const priorityHighDiv = document.createElement('div');
+        priorityHighDiv.appendChild(createInput('task-priority', 'radio', true));
+        priorityHighDiv.appendChild(createLabel('task-priority', 'High'));
+
+        const priorityFieldset = document.createElement('fieldset');
+        const priorityLegend = document.createElement('legend');
+        priorityLegend.textContent = 'Select Priority*';
+        priorityFieldset.append(priorityLegend, priorityLowDiv, priorityMediumDiv, priorityHighDiv);
+
+        const buttonDiv = document.createElement('div');
+        buttonDiv.id = 'btn-task-modal-container';
+        buttonDiv.appendChild(createAddButton('btn-add-task'));
+        buttonDiv.appendChild(createCancelButton('btn-cancel-task'));
+
+        taskModalDiv.appendChild(titleDiv);
+        taskModalDiv.appendChild(descriptionDiv);
+        taskModalDiv.appendChild(dueDateDiv);
+        taskModalDiv.appendChild(priorityFieldset);
+        taskModalDiv.appendChild(createErrorField('task-warning'));
+        taskModalDiv.appendChild(buttonDiv);
+
+        taskModalContainer.appendChild(taskModalDiv);
+    };
+
+    const removeTaskModal = () => {
+        const taskModalContainer = document.getElementById('task-modal-container');
+        taskModalContainer.textContent = '';
+    };
+
+    const toggleNewTaskButton = (isProject) => {
+        const newTaskButton = document.getElementById('btn-new-task');
+
+        if (isProject > 0) {
+            newTaskButton.style.display = 'flex';
+        } else {
+            newTaskButton.style.display = 'none';
+        }
+    };
+
     return {
         errorMsgProjectExist,
         errorMsgProjectFieldEmpty,
         createProjectModal,
         removeProjectModal,
         updateProjectList,
-        removeProjectSelection
+        removeProjectSelection,
+        addTaskHeaderText,
+        createTaskModal,
+        removeTaskModal,
+        toggleNewTaskButton
     };
 })();
 

@@ -144,6 +144,10 @@ table {
     --warning-color: #b91c1c;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Hind Siliguri', sans-serif, 'Segoe UI', Helvetica, Arial, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', system-ui;
@@ -187,7 +191,7 @@ main {
 }
 
 #task-content {
-    flex: 3;
+    flex: 4;
 }
 
 .nav-item {
@@ -213,7 +217,8 @@ main {
     gap: 0.5rem;
 }
 
-#nav-bottom h1 {
+#nav-bottom h1,
+#task-content h1 {
     font-size: 1.5rem;
     font-weight: 600;
 }
@@ -282,7 +287,7 @@ main {
 }
 
 #btn-new-project-container,
-.btn-new-task-container-active {
+#btn-new-task-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -332,34 +337,51 @@ main {
     margin: 0 0.5rem 0 0.5rem;
 }
 
-#project-name-input {
+#project-name-input,
+#task-title-input,
+#task-description-input,
+#task-due-date-input {
     font-family: 'Hind Siliguri', sans-serif, 'Segoe UI', Helvetica, Arial, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', system-ui;
     border-radius: 8px;
-    font-size: 1.3rem;
-    padding: 0.3rem 0.6rem 0.3rem 0.6rem;
     border: 1px solid var(--border-color);
-    width: 100%;
 }
 
-#project-warning {
+#project-name-input {
+    font-size: 1.3rem;
+    padding: 0.3rem 0.6rem 0.3rem 0.6rem;
+}
+
+#task-title-input,
+#task-description-input,
+#task-due-date-input {
+    font-size: 1rem;
+    padding: 0.2rem 0.4rem 0.2rem 0.4rem;
+}
+
+#project-warning,
+#task-warning {
     height: 1rem;
     color: var(--warning-color);
 }
 
-#btn-project-modal-container {
+#btn-project-modal-container,
+#btn-task-modal-container {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
     gap: 1rem;
 }
 
-#btn-add-project:hover {
+#btn-add-project:hover,
+#btn-add-task:hover {
     cursor: pointer;
     background-color: var(--btn-add-color-hover);
 }
 
 #btn-cancel-project:hover,
+#btn-cancel-task:hover,
 #btn-new-task:hover {
     cursor: pointer;
     background-color: var(--btn-cancel-color-hover);
@@ -367,12 +389,15 @@ main {
 
 #btn-add-project:active,
 #btn-cancel-project:active,
+#btn-cancel-task:active,
 #btn-new-task:active {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
 #btn-add-project,
-#btn-cancel-project {
+#btn-cancel-project,
+#btn-add-task,
+#btn-cancel-task {
     border: none;
     display: flex;
     justify-content: center;
@@ -384,18 +409,16 @@ main {
     padding: 0.4rem 0.8rem 0.4rem 0.8rem;
 }
 
-#btn-add-project {
+#btn-add-project,
+#btn-add-task {
     width: 5rem;
     background-color: var(--btn-add-color);
 }
 
-#btn-cancel-project {
+#btn-cancel-project,
+#btn-cancel-task {
     width: 5rem;
     background-color: var(--btn-cancel-color);
-}
-
-.btn-new-task-container-inactive {
-    display: none;
 }
 
 #btn-new-task {
@@ -414,6 +437,51 @@ main {
 }
 
 #task-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+#task-modal-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#task-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.task-modal-input,
+#task-modal > fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+#task-modal > fieldset > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#task-modal label,
+#task-content legend {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.description-input-sublabel {
+    font-size: 0.7rem;
+    font-weight: 100;
+    color: #a0a3a7;
 }
 
 footer {
