@@ -1,5 +1,6 @@
 import ui from './ui';
 import { Project, projectArray } from './project';
+import { Task, taskArray } from './task';
 
 const controller = (() => {
     // Task controller
@@ -9,19 +10,47 @@ const controller = (() => {
         ui.removeTaskModal();
     };
 
+    const getTaskPriority = (taskPriority) => {
+        let priority = '';
+        for (let i = 0; i < taskPriority.length; i++) {
+            if (taskPriority[i].checked) {
+                switch (taskPriority[i].id) {
+                    case 'task-priority-low':
+                        priority = 'low';
+                        break;
+                    case 'task-priority-medium':
+                        priority = 'medium';
+                        break;
+                    case 'task-priority-high':
+                        priority = 'high';
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            }
+        }
+        return priority;
+    };
+
     const setTaskModalButtonsEventListener = () => {
-        const addButton = document.getElementById('btn-add-task');
+        const formTaskModal = document.querySelector('form');
         const cancelButton = document.getElementById('btn-cancel-task');
+
         const taskTitleInput = document.getElementById('task-title-input');
         const taskDescriptionInput = document.getElementById('task-description-input');
         const taskDueDateInput = document.getElementById('task-due-date-input');
-        const taskPriorityLowInput = document.getElementById('task-priority-low-input');
-        const taskPriorityMediumInput = document.getElementById('task-priority-medium-input');
-        const taskPriorityHighInput = document.getElementById('task-priority-high-input');
+        const taskPriorityInputs = document.querySelectorAll('.task-priority');
+
         const newTaskButton = document.getElementById('btn-new-task');
 
-        addButton.addEventListener('click', () => {
-            /*   if (projectArray.isTaskExist(taskTitleInput.value)) {
+        const projectList = document.querySelectorAll('.project-item');
+
+        formTaskModal.addEventListener('submit', (event) => {
+            // default button action should not be taken
+            // button does not let to 'submit' the page
+            event.preventDefault();
+            /*if (projectArray.isTaskExist(taskTitleInput.value)) {
                 ui.errorMsgTaskExist();
             } else if (
                 taskTitleInput.value === null ||
@@ -43,11 +72,41 @@ const controller = (() => {
                     // ui.removeProjectInformation();
                 }
 
-                ui.removeProjectModal();
-            }*/
+                ui.removeProjectModal();*/
+
+            const taskPriorityInput = getTaskPriority(taskPriorityInputs);
+
+            const newTask = Task(
+                taskTitleInput.value,
+                taskDescriptionInput.value,
+                taskDueDateInput.value,
+                taskPriorityInput
+            );
+
+            for (let i = 0; i < projectList.length; i++) {
+                if (projectList[i].classList.contains('item-selected')) {
+                    //const projectSelected = projectList[i].firstChild.lastChild.textContent;
+                    const projectSelectedID = projectList[i].dataset.index;
+                    break;
+                }
+            }
+
+            /*taskArray.addTask(newTask);
+            const tasks = taskArray.getTasks();
+            tasks.forEach((task) => {
+                console.log(
+                    task.getName(),
+                    task.getDescription(),
+                    task.getDueDate(),
+                    task.getPriority()
+                );
+            });*/
         });
 
-        cancelButton.addEventListener('click', () => {
+        cancelButton.addEventListener('click', (event) => {
+            // default button action should not be taken
+            // button does not check 'input's required'
+            event.preventDefault();
             ui.removeTaskModal();
             ui.toggleNewTaskButton(projectArray.getProjects().length);
         });
@@ -92,14 +151,14 @@ const controller = (() => {
     };
 
     const setProjectRemoveEventListener = () => {
-        const projectList = document.querySelectorAll('.project-item-right');
+        const projectRemoveButton = document.querySelectorAll('.project-item-right');
+        const projectField = document.getElementById('project-field');
 
         // Set event listener
-        projectList.forEach((project) => {
+        projectRemoveButton.forEach((project) => {
             project.addEventListener('click', () => {
-                projectArray.removeProject(project.dataset.index);
+                projectArray.removeProject(project.parentNode.dataset.index);
 
-                const projectField = document.getElementById('project-field');
                 projectField.textContent = '';
 
                 if (projectArray.getProjects().length > 0) {
@@ -122,7 +181,10 @@ const controller = (() => {
         addButton.addEventListener('click', () => {
             if (projectArray.isProjectExist(projectNameInput.value)) {
                 ui.errorMsgProjectExist();
-            } else if (projectNameInput.value.match(/^ *$/) !== null) {
+            } else if (
+                projectNameInput.value === null ||
+                projectNameInput.value.match(/^ *$/) !== null
+            ) {
                 ui.errorMsgProjectFieldEmpty();
             } else {
                 const newProject = Project(projectNameInput.value);

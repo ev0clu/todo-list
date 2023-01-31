@@ -1,18 +1,19 @@
 const ui = (() => {
     // General UI
-    const createLabel = (inputID, text) => {
+    const createLabel = (id, text) => {
         const label = document.createElement('label');
-        label.for = inputID;
+        label.for = id;
         label.textContent = text;
 
         return label;
     };
 
-    const createInput = (inputID, type, isRequired) => {
+    const createInput = (name, id, type, isRequired) => {
         const input = document.createElement('input');
+        input.classList.add(name);
+        input.name = name;
+        input.id = id;
         input.type = type;
-        input.id = inputID;
-        input.name = inputID;
         input.required = isRequired;
 
         return input;
@@ -72,7 +73,9 @@ const ui = (() => {
         buttonDiv.appendChild(createAddButton('btn-add-project'));
         buttonDiv.appendChild(createCancelButton('btn-cancel-project'));
 
-        projectModalDiv.appendChild(createInput('project-name-input', 'text', true));
+        projectModalDiv.appendChild(
+            createInput('project-name-input', 'project-name-input', 'text')
+        );
         projectModalDiv.appendChild(createErrorField('project-warning'));
         projectModalDiv.appendChild(buttonDiv);
     };
@@ -87,6 +90,7 @@ const ui = (() => {
     const createProjectItem = (project, index) => {
         const projectItem = document.createElement('li');
         projectItem.classList.add('project-item');
+        projectItem.setAttribute('data-index', `${index}`);
 
         const buttonProjectItemLeft = document.createElement('button');
         buttonProjectItemLeft.classList.add('project-item-left');
@@ -100,7 +104,6 @@ const ui = (() => {
 
         const buttonProjectItemRight = document.createElement('button');
         buttonProjectItemRight.classList.add('project-item-right');
-        buttonProjectItemRight.setAttribute('data-index', `${index}`);
 
         const projectRemoveIcon = document.createElement('span');
         projectRemoveIcon.classList.add('material-symbols-outlined');
@@ -138,11 +141,12 @@ const ui = (() => {
 
         const taskModalDiv = document.createElement('form');
         taskModalDiv.id = 'task-modal';
+        taskModalDiv.method = 'post';
 
         const titleDiv = document.createElement('div');
         titleDiv.classList.add('task-modal-input');
         titleDiv.appendChild(createLabel('task-title-input', 'Title*'));
-        const title = createInput('task-title-input', 'text', true);
+        const title = createInput('task-title-input', 'task-title-input', 'text', true);
         titleDiv.appendChild(title);
 
         const descriptionDiv = document.createElement('div');
@@ -162,19 +166,27 @@ const ui = (() => {
         const dueDateDiv = document.createElement('div');
         dueDateDiv.classList.add('task-modal-input');
         dueDateDiv.appendChild(createLabel('task-due-date-input', 'Due Date*'));
-        dueDateDiv.appendChild(createInput('task-due-date-input', 'date', true));
+        dueDateDiv.appendChild(
+            createInput('task-due-date-input', 'task-due-date-input', 'date', true)
+        );
 
         const priorityLowDiv = document.createElement('div');
-        priorityLowDiv.appendChild(createInput('task-priority', 'radio', true));
-        priorityLowDiv.appendChild(createLabel('task-priority', 'Low'));
+        priorityLowDiv.appendChild(
+            createInput('task-priority', 'task-priority-low', 'radio', true)
+        );
+        priorityLowDiv.appendChild(createLabel('task-priority-low', 'Low'));
 
         const priorityMediumDiv = document.createElement('div');
-        priorityMediumDiv.appendChild(createInput('task-priority', 'radio', true));
-        priorityMediumDiv.appendChild(createLabel('task-priority', 'Medium'));
+        priorityMediumDiv.appendChild(
+            createInput('task-priority', 'task-priority-medium', 'radio', true)
+        );
+        priorityMediumDiv.appendChild(createLabel('task-priority-medium', 'Medium'));
 
         const priorityHighDiv = document.createElement('div');
-        priorityHighDiv.appendChild(createInput('task-priority', 'radio', true));
-        priorityHighDiv.appendChild(createLabel('task-priority', 'High'));
+        priorityHighDiv.appendChild(
+            createInput('task-priority', 'task-priority-high', 'radio', true)
+        );
+        priorityHighDiv.appendChild(createLabel('task-priority-high', 'High'));
 
         const priorityFieldset = document.createElement('fieldset');
         const priorityLegend = document.createElement('legend');

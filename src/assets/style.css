@@ -190,10 +190,6 @@ main {
     border-right: 1px solid var(--border-color);
 }
 
-#task-content {
-    flex: 4;
-}
-
 .nav-item {
     display: flex;
     flex-direction: row;
@@ -334,7 +330,6 @@ main {
     justify-content: center;
     align-items: center;
     gap: 0.4rem;
-    margin: 0 0.5rem 0 0.5rem;
 }
 
 #project-name-input,
@@ -348,8 +343,10 @@ main {
 }
 
 #project-name-input {
+    display: block;
     font-size: 1.3rem;
     padding: 0.3rem 0.6rem 0.3rem 0.6rem;
+    width: 100%;
 }
 
 #task-title-input,
@@ -437,6 +434,7 @@ main {
 }
 
 #task-content {
+    flex: 4;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;

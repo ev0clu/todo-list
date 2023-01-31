@@ -1,6 +1,12 @@
+import Task from './task';
+
 const Project = (name) => {
     const getName = () => name;
-    return { getName };
+    const addTask = (nameName, taskDescription, taskDueDate, taskPriority) => {
+        Task(nameName, taskDescription, taskDueDate, taskPriority);
+    };
+
+    return { getName, addTask };
 };
 
 const projectArray = (() => {
@@ -14,8 +20,9 @@ const projectArray = (() => {
     // -- end --
 
     const removeProject = (index) => getProjects().splice(index, 1);
-    const isProjectExist = (newProjectName) =>
+    const isProjectExist = (newProjectName) => {
         getProjects().some((project) => project.getName() === newProjectName);
+    };
 
     return { getProjects, addProject, removeProject, isProjectExist, getProjectsName };
 })();
