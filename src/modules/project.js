@@ -3,11 +3,11 @@ const Project = (name) => {
 
     const getProjectName = () => name;
     const getTasks = () => tasks;
-    const addTask = (task) => tasks.push(task);
-    const getTaskName = (i) => tasks[i].getName();
-    const getTaskDescription = (i) => tasks[i].getDescription();
-    const getTaskDueDate = (i) => tasks[i].getDueDate();
-    const getTaskPriority = (i) => tasks[i].getPriority();
+    const addTask = (task) => getTasks().push(task);
+    const getTaskName = (i) => getTasks()[i].getName();
+    const getTaskDescription = (i) => getTasks()[i].getDescription();
+    const getTaskDueDate = (i) => getTasks()[i].getDueDate();
+    const getTaskPriority = (i) => getTasks()[i].getPriority();
 
     return {
         getProjectName,
@@ -31,9 +31,8 @@ const projectArray = (() => {
     // -- end --
 
     const removeProject = (index) => getProjects().splice(index, 1);
-    const isProjectExist = (newProjectName) => {
+    const isProjectExist = (newProjectName) =>
         getProjects().some((project) => project.getProjectName() === newProjectName);
-    };
 
     return { getProjects, addProject, removeProject, isProjectExist, getProjectsName };
 })();
