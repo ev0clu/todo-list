@@ -100,7 +100,7 @@ const ui = (() => {
         projectItemIcon.textContent = 'checklist';
 
         const projectName = document.createElement('p');
-        projectName.textContent = project.getName();
+        projectName.textContent = project.getProjectName();
 
         const buttonProjectItemRight = document.createElement('button');
         buttonProjectItemRight.classList.add('project-item-right');
@@ -134,6 +134,17 @@ const ui = (() => {
     const addTaskHeaderText = (projectName) => {
         const taskContent = document.getElementById('task-content');
         taskContent.children[0].textContent = projectName;
+    };
+
+    const createTasksUI = (project, tasks) => {
+        console.log('project name: ', project.getProjectName());
+
+        for (let i = 0; i < tasks.length; i++) {
+            console.log('task name: ', project.getTaskName(i));
+            console.log('task info: ', project.getTaskDescription(i));
+            console.log('task date: ', project.getTaskDueDate(i));
+            console.log('task prio: ', project.getTaskPriority(i));
+        }
     };
 
     const createTaskModal = () => {
@@ -231,6 +242,7 @@ const ui = (() => {
         updateProjectList,
         removeProjectSelection,
         addTaskHeaderText,
+        createTasksUI,
         createTaskModal,
         removeTaskModal,
         toggleNewTaskButton

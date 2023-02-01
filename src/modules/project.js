@@ -1,27 +1,38 @@
-import Task from './task';
-
 const Project = (name) => {
-    const getName = () => name;
-    const addTask = (nameName, taskDescription, taskDueDate, taskPriority) => {
-        Task(nameName, taskDescription, taskDueDate, taskPriority);
-    };
+    const tasks = [];
 
-    return { getName, addTask };
+    const getProjectName = () => name;
+    const getTasks = () => tasks;
+    const addTask = (task) => tasks.push(task);
+    const getTaskName = (i) => tasks[i].getName();
+    const getTaskDescription = (i) => tasks[i].getDescription();
+    const getTaskDueDate = (i) => tasks[i].getDueDate();
+    const getTaskPriority = (i) => tasks[i].getPriority();
+
+    return {
+        getProjectName,
+        getTasks,
+        addTask,
+        getTaskName,
+        getTaskDescription,
+        getTaskDueDate,
+        getTaskPriority
+    };
 };
 
 const projectArray = (() => {
     const projects = [];
 
     const getProjects = () => projects;
-    const addProject = (name) => getProjects().push(name);
+    const addProject = (project) => getProjects().push(project);
 
     // Only for developement
-    const getProjectsName = () => getProjects().map((project) => project.getName());
+    const getProjectsName = () => getProjects().map((project) => project.getProjectName());
     // -- end --
 
     const removeProject = (index) => getProjects().splice(index, 1);
     const isProjectExist = (newProjectName) => {
-        getProjects().some((project) => project.getName() === newProjectName);
+        getProjects().some((project) => project.getProjectName() === newProjectName);
     };
 
     return { getProjects, addProject, removeProject, isProjectExist, getProjectsName };

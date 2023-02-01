@@ -1,13 +1,24 @@
 import ui from './ui';
 import { Project, projectArray } from './project';
-import { Task, taskArray } from './task';
+import Task from './task';
 
 const controller = (() => {
     // Task controller
-    const loadTasks = (projectName) => {
-        ui.addTaskHeaderText(projectName);
-        ui.toggleNewTaskButton(projectArray.getProjects().length);
-        ui.removeTaskModal();
+    const loadTaskField = (projectIndex) => {
+        if (projectIndex !== null) {
+            const projects = projectArray.getProjects();
+            const project = projects[projectIndex];
+            const tasks = project.getTasks();
+
+            ui.addTaskHeaderText(project.getProjectName());
+            ui.createTasksUI(project, tasks);
+            ui.toggleNewTaskButton(projectArray.getProjects().length);
+            ui.removeTaskModal();
+        } else {
+            ui.addTaskHeaderText('');
+            ui.toggleNewTaskButton(projectArray.getProjects().length);
+            ui.removeTaskModal();
+        }
     };
 
     const getTaskPriority = (taskPriority) => {
@@ -76,31 +87,28 @@ const controller = (() => {
 
             const taskPriorityInput = getTaskPriority(taskPriorityInputs);
 
-            const newTask = Task(
-                taskTitleInput.value,
-                taskDescriptionInput.value,
-                taskDueDateInput.value,
-                taskPriorityInput
-            );
-
             for (let i = 0; i < projectList.length; i++) {
                 if (projectList[i].classList.contains('item-selected')) {
                     //const projectSelected = projectList[i].firstChild.lastChild.textContent;
-                    const projectSelectedID = projectList[i].dataset.index;
+                    const projectIndex = projectList[i].dataset.index;
+                    const projects = projectArray.getProjects();
+                    const project = projects[projectIndex];
+
+                    const newTask = Task(
+                        taskTitleInput.value,
+                        taskDescriptionInput.value,
+                        taskDueDateInput.value,
+                        taskPriorityInput
+                    );
+
+                    project.addTask(newTask);
+                    loadTaskField(projectIndex);
+
                     break;
                 }
             }
-
-            /*taskArray.addTask(newTask);
-            const tasks = taskArray.getTasks();
-            tasks.forEach((task) => {
-                console.log(
-                    task.getName(),
-                    task.getDescription(),
-                    task.getDueDate(),
-                    task.getPriority()
-                );
-            });*/
+            ui.removeTaskModal();
+            ui.toggleNewTaskButton(projectArray.getProjects().length);
         });
 
         cancelButton.addEventListener('click', (event) => {
@@ -119,7 +127,7 @@ const controller = (() => {
         // Set event listener
         newTaskButton.addEventListener('click', () => {
             newTaskButton.style.display = 'none';
-            newProjectButton.style.display = 'block';
+            //newProjectButton.style.display = 'block';
             ui.removeProjectModal();
             ui.createTaskModal();
             setTaskModalButtonsEventListener();
@@ -138,14 +146,14 @@ const controller = (() => {
 
         ui.removeProjectSelection(projectItemList);
         firstProjectItem.classList.add('item-selected');
-        loadTasks(firstProjectName);
+        loadTaskField(firstProjectItem.dataset.index);
 
         // Set event listener
         projectItem.forEach((project) => {
             project.addEventListener('click', () => {
                 ui.removeProjectSelection(projectItemList);
                 project.parentNode.classList.add('item-selected');
-                loadTasks(project.children[1].textContent);
+                loadTaskField(project.parentNode.dataset.index);
             });
         });
     };
@@ -166,7 +174,7 @@ const controller = (() => {
                     setProjectSelectionEventListener();
                     setProjectRemoveEventListener();
                 } else {
-                    loadTasks('');
+                    loadTaskField(null);
                 }
             });
         });
