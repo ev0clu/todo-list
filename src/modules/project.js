@@ -9,6 +9,8 @@ const Project = (name) => {
     const getTaskDueDate = (i) => getTasks()[i].getDueDate();
     const getTaskPriority = (i) => getTasks()[i].getPriority();
 
+    const isTaskExist = (newTask) => getTasks().some((task) => task.getName() === newTask);
+
     return {
         getProjectName,
         getTasks,
@@ -16,7 +18,8 @@ const Project = (name) => {
         getTaskName,
         getTaskDescription,
         getTaskDueDate,
-        getTaskPriority
+        getTaskPriority,
+        isTaskExist
     };
 };
 

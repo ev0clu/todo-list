@@ -136,15 +136,67 @@ const ui = (() => {
         taskContent.children[0].textContent = projectName;
     };
 
-    const createTasksUI = (project, tasks) => {
-        console.log('project name: ', project.getProjectName());
+    const createTaskItem = (projectName, taskName, index, priority) => {
+        const taskItem = document.createElement('li');
+        taskItem.classList.add('task-item');
+        taskItem.setAttribute('data-index', `${index}`);
+        taskItem.classList.add(`priority-${priority}`);
 
+        const taskItemLeft = document.createElement('div');
+        taskItemLeft.classList.add('task-item-left');
+        const taskCheckbox = document.createElement('input');
+        taskCheckbox.type = 'checkbox';
+        taskCheckbox.id = `${projectName}${taskName}`;
+        taskCheckbox.name = `${projectName}${taskName}`;
+        taskCheckbox.classList.add('task-checkbox');
+        const taskNameHeading = document.createElement('h1');
+        taskNameHeading.classList.add('task-name');
+        taskNameHeading.textContent = taskName;
+
+        const taskItemMiddle = document.createElement('div');
+        taskItemMiddle.classList.add('task-item-middle');
+
+        const taskItemRight = document.createElement('div');
+        taskItemRight.classList.add('task-item-right');
+        const taskViewIcon = document.createElement('span');
+        taskViewIcon.classList.add('material-symbols-outlined');
+        taskViewIcon.textContent = 'visibility';
+        const taskEditIcon = document.createElement('span');
+        taskEditIcon.classList.add('material-symbols-outlined');
+        taskEditIcon.textContent = 'edit';
+        const taskRemoveIcon = document.createElement('span');
+        taskRemoveIcon.classList.add('material-symbols-outlined');
+        taskRemoveIcon.textContent = 'delete';
+
+        taskItemLeft.append(taskCheckbox, taskName);
+        taskItemRight.append(taskViewIcon, taskEditIcon, taskRemoveIcon);
+
+        taskItem.append(taskItemLeft, taskItemMiddle, taskItemRight);
+
+        return taskItem;
+    };
+
+    const updateTaskList = (projectName, taskName, index, priority) => {
+        const taskField = document.getElementById('task-field');
+
+        taskField.appendChild(createTaskItem(projectName, taskName, index, priority));
+
+        /*
         for (let i = 0; i < tasks.length; i++) {
             console.log('task name: ', project.getTaskName(i));
             console.log('task info: ', project.getTaskDescription(i));
             console.log('task date: ', project.getTaskDueDate(i));
             console.log('task prio: ', project.getTaskPriority(i));
         }
+*/
+        /*console.log('project name: ', project.getProjectName());
+
+        for (let i = 0; i < tasks.length; i++) {
+            console.log('task name: ', project.getTaskName(i));
+            console.log('task info: ', project.getTaskDescription(i));
+            console.log('task date: ', project.getTaskDueDate(i));
+            console.log('task prio: ', project.getTaskPriority(i));
+        }*/
     };
 
     const createTaskModal = () => {
@@ -234,6 +286,16 @@ const ui = (() => {
         }
     };
 
+    const errorMsgTaskExist = () => {
+        const errorMsg = document.getElementById('task-warning');
+        errorMsg.textContent = 'Task already exist';
+    };
+
+    const errorMsgTaskFieldEmpty = () => {
+        const errorMsg = document.getElementById('task-warning');
+        errorMsg.textContent = 'Task name is missing';
+    };
+
     return {
         errorMsgProjectExist,
         errorMsgProjectFieldEmpty,
@@ -242,10 +304,12 @@ const ui = (() => {
         updateProjectList,
         removeProjectSelection,
         addTaskHeaderText,
-        createTasksUI,
+        updateTaskList,
         createTaskModal,
         removeTaskModal,
-        toggleNewTaskButton
+        toggleNewTaskButton,
+        errorMsgTaskExist,
+        errorMsgTaskFieldEmpty
     };
 })();
 

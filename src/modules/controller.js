@@ -4,14 +4,40 @@ import Task from './task';
 
 const controller = (() => {
     // Task controller
+    const setCheckboxEventListener = () => {
+        const checkboxes = document.querySelectorAll('.task-checkbox');
+
+        // Set event listener
+        checkboxes.forEach((checkbox) => {
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) {
+                    console.log('Checkbox is checked..');
+                } else {
+                    console.log('Checkbox is not checked..');
+                }
+            });
+        });
+    };
+
     const loadTaskField = (projectIndex) => {
+        const taskField = document.getElementById('task-field');
+        taskField.textContent = '';
         if (projectIndex !== null) {
             const projects = projectArray.getProjects();
             const project = projects[projectIndex];
-            const tasks = project.getTasks();
 
             ui.addTaskHeaderText(project.getProjectName());
-            ui.createTasksUI(project, tasks);
+
+            for (let i = 0; i < project.getTasks().length; i++) {
+                ui.updateTaskList(
+                    project.getProjectName(),
+                    project.getTaskName(i),
+                    i,
+                    project.getTaskPriority(i)
+                );
+            }
+
+            setCheckboxEventListener();
             ui.toggleNewTaskButton(projectArray.getProjects().length);
             ui.removeTaskModal();
         } else {
@@ -61,54 +87,34 @@ const controller = (() => {
             // default button action should not be taken
             // button does not let to 'submit' the page
             event.preventDefault();
-            /*if (projectArray.isTaskExist(taskTitleInput.value)) {
-                ui.errorMsgTaskExist();
-            } else if (
-                taskTitleInput.value === null ||
-                taskTitleInput.value.match(/^ *$/) !== null
-            ) {
-                ui.errorMsgTaskFieldEmpty();
-            } else {
-                const newTask = Task(taskTitleInput.value);
-                projectArray.addProject(newTask);
-
-                const taskField = document.getElementById('task-field');
-                taskField.textContent = '';
-                if (projectArray.getProjects().length > 0) {
-                    ui.updateProjectList(projectArray.getProjects(), projectField);
-                    setProjectSelectionEventListener();
-                    setProjectRemoveEventListener();
-                    openTaskModalEventListener();
-                } else {
-                    // ui.removeProjectInformation();
-                }
-
-                ui.removeProjectModal();*/
-
-            const taskPriorityInput = getTaskPriority(taskPriorityInputs);
 
             for (let i = 0; i < projectList.length; i++) {
                 if (projectList[i].classList.contains('item-selected')) {
-                    //const projectSelected = projectList[i].firstChild.lastChild.textContent;
                     const projectIndex = projectList[i].dataset.index;
                     const projects = projectArray.getProjects();
                     const project = projects[projectIndex];
+                    if (project.isTaskExist(taskTitleInput.value)) {
+                        ui.errorMsgTaskExist();
+                    } else if (taskTitleInput.value.match(/^ *$/) !== null) {
+                        ui.errorMsgTaskFieldEmpty();
+                    } else {
+                        const taskPriorityInput = getTaskPriority(taskPriorityInputs);
 
-                    const newTask = Task(
-                        taskTitleInput.value,
-                        taskDescriptionInput.value,
-                        taskDueDateInput.value,
-                        taskPriorityInput
-                    );
+                        const newTask = Task(
+                            taskTitleInput.value,
+                            taskDescriptionInput.value,
+                            taskDueDateInput.value,
+                            taskPriorityInput
+                        );
 
-                    project.addTask(newTask);
-                    loadTaskField(projectIndex);
-
-                    break;
+                        project.addTask(newTask);
+                        loadTaskField(projectIndex);
+                        ui.removeTaskModal();
+                        ui.toggleNewTaskButton(projectArray.getProjects().length);
+                        break;
+                    }
                 }
             }
-            ui.removeTaskModal();
-            ui.toggleNewTaskButton(projectArray.getProjects().length);
         });
 
         cancelButton.addEventListener('click', (event) => {
