@@ -501,10 +501,32 @@ main {
     align-items: center;
 }
 .task-item {
+    gap: 1rem;
     width: 100%;
     border: 1px solid grey;
     padding: 0.5rem;
     border-radius: 8px;
+}
+
+.task-item-left {
+    justify-content: center;
+    font-size: 1.2rem;
+    gap: 0.5rem;
+}
+
+.task-item-right {
+    justify-content: center;
+    gap: 0.2rem;
+}
+
+.task-item-right .material-symbols-outlined:hover {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+    cursor: pointer;
+}
+
+.task-item-middle {
+    flex: 2;
+    text-align: end;
 }
 
 .priority-low {
@@ -519,26 +541,12 @@ main {
     box-shadow: inset 0.3rem 0 var(--priority-high-color);
 }
 
-.task-item-left {
-    font-size: 1.2rem;
-    gap: 0.5rem;
-}
-
-.task-item-right .material-symbols-outlined:hover {
-    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;
-    cursor: pointer;
-}
-
 #task-checkbox {
     cursor: pointer;
 }
 
-.task-item-middle {
-    flex: 2;
-}
-
-.task-item-right {
-    gap: 1rem;
+.task-done {
+    text-decoration: line-through;
 }
 
 footer {

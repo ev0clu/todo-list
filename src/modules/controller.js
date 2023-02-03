@@ -4,16 +4,20 @@ import Task from './task';
 
 const controller = (() => {
     // Task controller
-    const setCheckboxEventListener = () => {
+    const setCheckboxEventListener = (project) => {
         const checkboxes = document.querySelectorAll('.task-checkbox');
 
         // Set event listener
         checkboxes.forEach((checkbox) => {
             checkbox.addEventListener('change', () => {
+                const taskId = checkbox.parentNode.parentNode.dataset.index;
+
                 if (checkbox.checked) {
-                    console.log('Checkbox is checked..');
+                    ui.toggleCheckboxLabelState(checkbox.id, true);
+                    project.toggleTaskStatus(taskId, true);
                 } else {
-                    console.log('Checkbox is not checked..');
+                    ui.toggleCheckboxLabelState(checkbox.id, false);
+                    project.toggleTaskStatus(taskId, false);
                 }
             });
         });
@@ -31,14 +35,16 @@ const controller = (() => {
             for (let i = 0; i < project.getTasks().length; i++) {
                 ui.updateTaskList(
                     project.getProjectName(),
+                    project.getTaskStatus(i),
                     project.getTaskName(i),
                     i,
+                    project.getTaskDueDate(i),
                     project.getTaskPriority(i)
                 );
             }
 
-            setCheckboxEventListener();
-            ui.toggleNewTaskButton(projectArray.getProjects().length);
+            setCheckboxEventListener(project);
+            ui.toggleNewTaskButton(projects.length);
             ui.removeTaskModal();
         } else {
             ui.addTaskHeaderText('');

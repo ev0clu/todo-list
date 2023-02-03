@@ -4,12 +4,18 @@ const Project = (name) => {
     const getProjectName = () => name;
     const getTasks = () => tasks;
     const addTask = (task) => getTasks().push(task);
-    const getTaskName = (i) => getTasks()[i].getName();
-    const getTaskDescription = (i) => getTasks()[i].getDescription();
-    const getTaskDueDate = (i) => getTasks()[i].getDueDate();
-    const getTaskPriority = (i) => getTasks()[i].getPriority();
+    const getTaskName = (i) => getTasks()[i].name;
+    const getTaskDescription = (i) => getTasks()[i].description;
+    const getTaskDueDate = (i) => getTasks()[i].dueDate;
+    const getTaskPriority = (i) => getTasks()[i].priority;
+    const getTaskStatus = (i) => getTasks()[i].status;
 
-    const isTaskExist = (newTask) => getTasks().some((task) => task.getName() === newTask);
+    const isTaskExist = (newTask) => getTasks().some((task) => task.name === newTask);
+
+    const toggleTaskStatus = (i, newStatus) => {
+        const taskIndex = getTasks()[i];
+        taskIndex.status = newStatus;
+    };
 
     return {
         getProjectName,
@@ -19,7 +25,9 @@ const Project = (name) => {
         getTaskDescription,
         getTaskDueDate,
         getTaskPriority,
-        isTaskExist
+        getTaskStatus,
+        isTaskExist,
+        toggleTaskStatus
     };
 };
 

@@ -2,15 +2,15 @@ const ui = (() => {
     // General UI
     const createLabel = (id, text) => {
         const label = document.createElement('label');
-        label.for = id;
+        label.htmlFor = id;
         label.textContent = text;
 
         return label;
     };
 
-    const createInput = (name, id, type, isRequired) => {
+    const createInput = (className, name, id, type, isRequired) => {
         const input = document.createElement('input');
-        input.classList.add(name);
+        input.classList.add(className);
         input.name = name;
         input.id = id;
         input.type = type;
@@ -74,7 +74,7 @@ const ui = (() => {
         buttonDiv.appendChild(createCancelButton('btn-cancel-project'));
 
         projectModalDiv.appendChild(
-            createInput('project-name-input', 'project-name-input', 'text')
+            createInput('project-name-input', 'project-name-input', 'project-name-input', 'text')
         );
         projectModalDiv.appendChild(createErrorField('project-warning'));
         projectModalDiv.appendChild(buttonDiv);
@@ -131,12 +131,22 @@ const ui = (() => {
     };
 
     // Task UI
+    const toggleCheckboxLabelState = (id, isChecked) => {
+        const label = document.querySelector(`label[for="${id}"]`);
+        console.log(label);
+        if (isChecked) {
+            label.classList.add('task-done');
+        } else {
+            label.classList.remove('task-done');
+        }
+    };
+
     const addTaskHeaderText = (projectName) => {
         const taskContent = document.getElementById('task-content');
         taskContent.children[0].textContent = projectName;
     };
 
-    const createTaskItem = (projectName, taskName, index, priority) => {
+    const createTaskItem = (projectName, checkStatus, taskName, index, dueDate, priority) => {
         const taskItem = document.createElement('li');
         taskItem.classList.add('task-item');
         taskItem.setAttribute('data-index', `${index}`);
@@ -145,16 +155,20 @@ const ui = (() => {
         const taskItemLeft = document.createElement('div');
         taskItemLeft.classList.add('task-item-left');
         const taskCheckbox = document.createElement('input');
-        taskCheckbox.type = 'checkbox';
-        taskCheckbox.id = `${projectName}${taskName}`;
         taskCheckbox.name = `${projectName}${taskName}`;
+        taskCheckbox.id = `${projectName}${taskName}`;
+        taskCheckbox.type = 'checkbox';
+        taskCheckbox.checked = checkStatus;
         taskCheckbox.classList.add('task-checkbox');
-        const taskNameHeading = document.createElement('h1');
-        taskNameHeading.classList.add('task-name');
-        taskNameHeading.textContent = taskName;
+
+        const taskCheckboxLabel = createLabel(`${projectName}${taskName}`, taskName);
+        if (taskCheckbox.checked) {
+            taskCheckboxLabel.classList.add('task-done');
+        }
 
         const taskItemMiddle = document.createElement('div');
         taskItemMiddle.classList.add('task-item-middle');
+        taskItemMiddle.textContent = dueDate;
 
         const taskItemRight = document.createElement('div');
         taskItemRight.classList.add('task-item-right');
@@ -168,7 +182,7 @@ const ui = (() => {
         taskRemoveIcon.classList.add('material-symbols-outlined');
         taskRemoveIcon.textContent = 'delete';
 
-        taskItemLeft.append(taskCheckbox, taskName);
+        taskItemLeft.append(taskCheckbox, taskCheckboxLabel);
         taskItemRight.append(taskViewIcon, taskEditIcon, taskRemoveIcon);
 
         taskItem.append(taskItemLeft, taskItemMiddle, taskItemRight);
@@ -176,10 +190,12 @@ const ui = (() => {
         return taskItem;
     };
 
-    const updateTaskList = (projectName, taskName, index, priority) => {
+    const updateTaskList = (projectName, checkStatus, taskName, index, dueDate, priority) => {
         const taskField = document.getElementById('task-field');
 
-        taskField.appendChild(createTaskItem(projectName, taskName, index, priority));
+        taskField.appendChild(
+            createTaskItem(projectName, checkStatus, taskName, index, dueDate, priority)
+        );
 
         /*
         for (let i = 0; i < tasks.length; i++) {
@@ -209,7 +225,13 @@ const ui = (() => {
         const titleDiv = document.createElement('div');
         titleDiv.classList.add('task-modal-input');
         titleDiv.appendChild(createLabel('task-title-input', 'Title*'));
-        const title = createInput('task-title-input', 'task-title-input', 'text', true);
+        const title = createInput(
+            'task-title-input',
+            'task-title-input',
+            'task-title-input',
+            'text',
+            true
+        );
         titleDiv.appendChild(title);
 
         const descriptionDiv = document.createElement('div');
@@ -230,24 +252,30 @@ const ui = (() => {
         dueDateDiv.classList.add('task-modal-input');
         dueDateDiv.appendChild(createLabel('task-due-date-input', 'Due Date*'));
         dueDateDiv.appendChild(
-            createInput('task-due-date-input', 'task-due-date-input', 'date', true)
+            createInput(
+                'task-due-date-input',
+                'task-due-date-input',
+                'task-due-date-input',
+                'date',
+                true
+            )
         );
 
         const priorityLowDiv = document.createElement('div');
         priorityLowDiv.appendChild(
-            createInput('task-priority', 'task-priority-low', 'radio', true)
+            createInput('task-priority', 'task-priority', 'task-priority-low', 'radio', true)
         );
         priorityLowDiv.appendChild(createLabel('task-priority-low', 'Low'));
 
         const priorityMediumDiv = document.createElement('div');
         priorityMediumDiv.appendChild(
-            createInput('task-priority', 'task-priority-medium', 'radio', true)
+            createInput('task-priority', 'task-priority', 'task-priority-medium', 'radio', true)
         );
         priorityMediumDiv.appendChild(createLabel('task-priority-medium', 'Medium'));
 
         const priorityHighDiv = document.createElement('div');
         priorityHighDiv.appendChild(
-            createInput('task-priority', 'task-priority-high', 'radio', true)
+            createInput('task-priority', 'task-priority', 'task-priority-high', 'radio', true)
         );
         priorityHighDiv.appendChild(createLabel('task-priority-high', 'High'));
 
@@ -303,6 +331,7 @@ const ui = (() => {
         removeProjectModal,
         updateProjectList,
         removeProjectSelection,
+        toggleCheckboxLabelState,
         addTaskHeaderText,
         updateTaskList,
         createTaskModal,
