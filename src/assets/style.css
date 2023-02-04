@@ -217,7 +217,8 @@ main {
 }
 
 #nav-bottom h1,
-#task-content h1 {
+#task-content h1,
+#task-modal-view-title {
     font-size: 1.5rem;
     font-weight: 600;
 }
@@ -459,6 +460,7 @@ main {
     padding: 2rem;
     border-radius: 8px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    width: 50%;
 }
 
 .task-modal-input,
@@ -500,6 +502,7 @@ main {
     flex-direction: row;
     align-items: center;
 }
+
 .task-item {
     gap: 1rem;
     width: 100%;
@@ -519,9 +522,24 @@ main {
     gap: 0.2rem;
 }
 
-.task-item-right .material-symbols-outlined:hover {
+.task-item-right .material-symbols-outlined:hover,
+#btn-close-view-task-modal .material-symbols-outlined:hover {
     font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;
     cursor: pointer;
+}
+
+.btn-task-view,
+.btn-task-edit,
+.btn-task-remove,
+#btn-close-view-task-modal {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background: none;
+    border: none;
+    font: inherit;
+    outline: inherit;
 }
 
 .task-item-middle {
@@ -547,6 +565,71 @@ main {
 
 .task-done {
     text-decoration: line-through;
+}
+
+.inactive {
+    pointer-events: none;
+    background-color: rgba(0, 0, 0, 0.2); /* Black w/ opacity */
+}
+
+#task-view-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    position: fixed; /* Position the pop-up fixed on the screen */
+    top: 50%; /* Position the pop-up vertically centered */
+    left: 63%; /* Position the pop-up horizontally centered */
+    transform: translate(-50%, -60%); /* Offset the pop-up to the center of the screen */
+    z-index: 1; /* Make sure the pop-up is on top of other elements */
+}
+
+#task-modal-view {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    padding: 2rem; /* Add some padding to the pop-up */
+    border-radius: 8px;
+    background-color: var(--body-color);
+    width: 50%;
+}
+
+#btn-close-view-task-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 26%;
+    top: 5%;
+}
+
+#btn-close-view-task-modal .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+}
+
+#task-informations {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 1.1rem;
+}
+
+#task-modal-view-description,
+#task-modal-view-duedate,
+#task-modal-view-priority {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+#task-modal-view-description > p:first-child,
+#task-modal-view-duedate > p:first-child,
+#task-modal-view-priority > p:first-child {
+    text-decoration: underline;
+    font-weight: bold;
 }
 
 footer {

@@ -53,6 +53,16 @@ const ui = (() => {
         return cancelButton;
     };
 
+    const toggleNodeState = () => {
+        const header = document.querySelector('header');
+        const main = document.querySelector('main');
+        const footer = document.querySelector('footer');
+
+        header.classList.toggle('inactive');
+        main.classList.toggle('inactive');
+        footer.classList.toggle('inactive');
+    };
+
     // Project UI
     const errorMsgProjectExist = () => {
         const errorMsg = document.getElementById('project-warning');
@@ -131,9 +141,70 @@ const ui = (() => {
     };
 
     // Task UI
+    const createViewTaskModal = (name, details, date, prio) => {
+        const taskViewContainer = document.getElementById('task-view-container');
+
+        const taskViewDiv = document.createElement('div');
+        taskViewDiv.id = 'task-modal-view';
+
+        const taskInfo = document.createElement('div');
+        taskInfo.id = 'task-informations';
+        const titleDiv = document.createElement('div');
+        titleDiv.id = 'task-modal-view-title';
+        const title = document.createElement('h1');
+        title.textContent = name;
+        titleDiv.appendChild(title);
+
+        const descriptionDiv = document.createElement('div');
+        descriptionDiv.id = 'task-modal-view-description';
+        const descriptionTitle = document.createElement('p');
+        descriptionTitle.textContent = 'Description:';
+        const description = document.createElement('p');
+        description.textContent = details;
+        descriptionDiv.append(descriptionTitle, description);
+
+        const dueDateDiv = document.createElement('div');
+        dueDateDiv.id = 'task-modal-view-duedate';
+        const dueDateTitle = document.createElement('p');
+        dueDateTitle.textContent = 'Due Date:';
+        const dueDate = document.createElement('p');
+        dueDate.textContent = date;
+        dueDateDiv.append(dueDateTitle, dueDate);
+
+        const priorityDiv = document.createElement('div');
+        priorityDiv.id = 'task-modal-view-priority';
+        const priorityTitle = document.createElement('p');
+        priorityTitle.textContent = 'Priority:';
+        const priority = document.createElement('p');
+        priority.textContent = prio;
+        priorityDiv.append(priorityTitle, priority);
+
+        const closeButton = document.createElement('button');
+        closeButton.id = 'btn-close-view-task-modal';
+        const closeButtonIcon = document.createElement('span');
+        closeButtonIcon.classList.add('material-symbols-outlined');
+        closeButtonIcon.textContent = 'cancel';
+        closeButton.appendChild(closeButtonIcon);
+
+        taskInfo.appendChild(descriptionDiv);
+        taskInfo.appendChild(dueDateDiv);
+        taskInfo.appendChild(priorityDiv);
+
+        taskViewDiv.appendChild(closeButton);
+        taskViewDiv.appendChild(titleDiv);
+        taskViewDiv.appendChild(taskInfo);
+
+        taskViewContainer.appendChild(taskViewDiv);
+    };
+
+    const removeViewTaskModal = () => {
+        const taskViewContainer = document.getElementById('task-view-container');
+        taskViewContainer.textContent = '';
+    };
+
     const toggleCheckboxLabelState = (id, isChecked) => {
         const label = document.querySelector(`label[for="${id}"]`);
-        console.log(label);
+
         if (isChecked) {
             label.classList.add('task-done');
         } else {
@@ -172,18 +243,31 @@ const ui = (() => {
 
         const taskItemRight = document.createElement('div');
         taskItemRight.classList.add('task-item-right');
+        const taskViewButton = document.createElement('button');
+        taskViewButton.classList.add('btn-task-view');
         const taskViewIcon = document.createElement('span');
         taskViewIcon.classList.add('material-symbols-outlined');
         taskViewIcon.textContent = 'visibility';
+
+        const taskEditButton = document.createElement('button');
+        taskEditButton.classList.add('btn-task-edit');
         const taskEditIcon = document.createElement('span');
         taskEditIcon.classList.add('material-symbols-outlined');
         taskEditIcon.textContent = 'edit';
+
+        const taskRemoveButton = document.createElement('button');
+        taskRemoveButton.classList.add('btn-task-remove');
         const taskRemoveIcon = document.createElement('span');
         taskRemoveIcon.classList.add('material-symbols-outlined');
         taskRemoveIcon.textContent = 'delete';
 
         taskItemLeft.append(taskCheckbox, taskCheckboxLabel);
-        taskItemRight.append(taskViewIcon, taskEditIcon, taskRemoveIcon);
+
+        taskViewButton.appendChild(taskViewIcon);
+        taskEditButton.appendChild(taskEditIcon);
+        taskRemoveButton.appendChild(taskRemoveIcon);
+
+        taskItemRight.append(taskViewButton, taskEditButton, taskRemoveButton);
 
         taskItem.append(taskItemLeft, taskItemMiddle, taskItemRight);
 
@@ -331,6 +415,9 @@ const ui = (() => {
         removeProjectModal,
         updateProjectList,
         removeProjectSelection,
+        createViewTaskModal,
+        removeViewTaskModal,
+        toggleNodeState,
         toggleCheckboxLabelState,
         addTaskHeaderText,
         updateTaskList,

@@ -4,6 +4,44 @@ import Task from './task';
 
 const controller = (() => {
     // Task controller
+    const setViewTaskModalCloseButtonsEventListener = () => {
+        const closeButton = document.getElementById('btn-close-view-task-modal');
+
+        // Set event listener
+        closeButton.addEventListener('click', () => {
+            ui.removeTaskModal();
+            ui.removeViewTaskModal();
+            ui.toggleNodeState();
+            ui.toggleNewTaskButton(projectArray.getProjects().length);
+        });
+    };
+
+    const setViewTaskEventListener = (project) => {
+        const viewButtons = document.querySelectorAll('.btn-task-view');
+        const newTaskButton = document.getElementById('btn-new-task');
+
+        // Set event listener
+        viewButtons.forEach((viewButton) => {
+            viewButton.addEventListener('click', () => {
+                const taskIndex = viewButton.parentNode.parentNode.dataset.index;
+                newTaskButton.style.display = 'none';
+                ui.removeProjectModal();
+                ui.removeTaskModal();
+                ui.toggleNodeState();
+
+                ui.createViewTaskModal(
+                    project.getTaskName(taskIndex),
+                    project.getTaskDescription(taskIndex),
+                    project.getTaskDueDate(taskIndex),
+                    project.getTaskPriority(taskIndex),
+                    project.getTaskStatus(taskIndex)
+                );
+
+                setViewTaskModalCloseButtonsEventListener();
+            });
+        });
+    };
+
     const setCheckboxEventListener = (project) => {
         const checkboxes = document.querySelectorAll('.task-checkbox');
 
@@ -44,6 +82,7 @@ const controller = (() => {
             }
 
             setCheckboxEventListener(project);
+            setViewTaskEventListener(project);
             ui.toggleNewTaskButton(projects.length);
             ui.removeTaskModal();
         } else {
@@ -59,13 +98,13 @@ const controller = (() => {
             if (taskPriority[i].checked) {
                 switch (taskPriority[i].id) {
                     case 'task-priority-low':
-                        priority = 'low';
+                        priority = 'Low';
                         break;
                     case 'task-priority-medium':
-                        priority = 'medium';
+                        priority = 'Medium';
                         break;
                     case 'task-priority-high':
-                        priority = 'high';
+                        priority = 'High';
                         break;
                     default:
                         break;
@@ -139,7 +178,7 @@ const controller = (() => {
         // Set event listener
         newTaskButton.addEventListener('click', () => {
             newTaskButton.style.display = 'none';
-            //newProjectButton.style.display = 'block';
+
             ui.removeProjectModal();
             ui.createTaskModal();
             setTaskModalButtonsEventListener();
