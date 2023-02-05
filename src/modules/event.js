@@ -145,6 +145,7 @@ const event = (() => {
                         );
                         controller.updateTaskList(projectIndex);
                         controller.removeTaskModal();
+                        controller.toggleNodeState();
                         controller.toggleNewTaskButton(projectArray.getProjects().length);
                         setCheckboxEventListener(project);
                         setViewTaskEventListener(project);
@@ -160,6 +161,7 @@ const event = (() => {
             // button does not check 'input's required'
             e.preventDefault();
             controller.removeTaskModal();
+            controller.toggleNodeState();
             controller.toggleNewTaskButton(projectArray.getProjects().length);
         });
     };
@@ -172,6 +174,7 @@ const event = (() => {
             newTaskButton.style.display = 'none';
 
             controller.openTaskModal();
+            controller.toggleNodeState();
             setTaskModalButtonsEventListener();
         });
     };
@@ -224,7 +227,6 @@ const event = (() => {
         projectRemoveButton.forEach((project) => {
             project.addEventListener('click', () => {
                 projectArray.removeProject(project.parentNode.dataset.index);
-
                 projectField.textContent = '';
 
                 if (projectArray.getProjects().length > 0) {
@@ -233,7 +235,7 @@ const event = (() => {
                     setProjectRemoveEventListener();
                 } else {
                     controller.toggleNewTaskButton(projectArray.getProjects().length);
-                    taskField.textContent = '';
+                    controller.addTaskHeaderText('');
                 }
             });
         });
@@ -280,7 +282,6 @@ const event = (() => {
         // Set event listener
         newProjectButton.addEventListener('click', () => {
             newProjectButton.style.display = 'none';
-            controller.removeTaskModal();
             ui.createProjectModal();
             setProjectModalButtonsEventListener();
         });

@@ -451,15 +451,22 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    position: fixed; /* Position the pop-up fixed on the screen */
+    top: 55%; /* Position the pop-up vertically centered */
+    left: 63%; /* Position the pop-up horizontally centered */
+    transform: translate(-50%, -50%); /* Offset the pop-up to the center of the screen */
+    z-index: 1; /* Make sure the pop-up is on top of other elements */
 }
 
 #task-modal {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    padding: 2rem;
-    border-radius: 8px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    padding: 2rem; /* Add some padding to the pop-up */
+    border-radius: 8px;
+    background-color: var(--body-color);
     width: 50%;
 }
 
@@ -581,7 +588,7 @@ main {
     position: fixed; /* Position the pop-up fixed on the screen */
     top: 50%; /* Position the pop-up vertically centered */
     left: 63%; /* Position the pop-up horizontally centered */
-    transform: translate(-50%, -60%); /* Offset the pop-up to the center of the screen */
+    transform: translate(-50%, -50%); /* Offset the pop-up to the center of the screen */
     z-index: 1; /* Make sure the pop-up is on top of other elements */
 }
 
