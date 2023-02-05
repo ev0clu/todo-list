@@ -39,6 +39,31 @@ const event = (() => {
         });
     };
 
+    const setEditTaskEventListener = (project) => {
+        const taskViewButtons = document.querySelectorAll('.btn-task-view');
+        const newTaskButton = document.getElementById('btn-new-task');
+
+        // Set event listener
+        taskViewButtons.forEach((task) => {
+            task.addEventListener('click', () => {
+                const taskIndex = task.parentNode.parentNode.dataset.index;
+                newTaskButton.style.display = 'none';
+                controller.removeProjectModal();
+                controller.removeTaskModal();
+                controller.toggleNodeState();
+
+                ui.createViewTaskModal(
+                    project.getTaskName(taskIndex),
+                    project.getTaskDescription(taskIndex),
+                    project.getTaskDueDate(taskIndex),
+                    project.getTaskPriority(taskIndex)
+                );
+
+                setViewTaskModalCloseButtonsEventListener();
+            });
+        });
+    };
+
     const setCheckboxEventListener = (project) => {
         const checkboxes = document.querySelectorAll('.task-checkbox');
 
@@ -58,25 +83,24 @@ const event = (() => {
         });
     };
 
-    const setRemoveTaskEventListener = (project) => {
+    const setRemoveTaskEventListener = (project, projectIndex) => {
         const taskRemoveButtons = document.querySelectorAll('.btn-task-remove');
         const taskField = document.getElementById('task-field');
 
         // Set event listener
         taskRemoveButtons.forEach((task) => {
             task.addEventListener('click', () => {
-                const projectIndex = task.parentNode.parentNode.dataset.index;
+                const taskIndex = task.parentNode.parentNode.dataset.index;
 
-                controller.removeProjectModal();
                 controller.removeTaskModal();
 
-                project.removeTask(task.parentNode.parentNode.dataset.index);
+                project.removeTask(taskIndex);
 
                 if (project.getTasks().length > 0) {
                     controller.updateTaskList(projectIndex);
                     setCheckboxEventListener(project);
                     setViewTaskEventListener(project);
-                    setRemoveTaskEventListener(project);
+                    setRemoveTaskEventListener(project, projectIndex);
                 } else {
                     taskField.textContent = '';
                 }
@@ -124,7 +148,7 @@ const event = (() => {
                         controller.toggleNewTaskButton(projectArray.getProjects().length);
                         setCheckboxEventListener(project);
                         setViewTaskEventListener(project);
-                        setRemoveTaskEventListener(project);
+                        setRemoveTaskEventListener(project, projectIndex);
                         break;
                     }
                 }
@@ -170,7 +194,7 @@ const event = (() => {
 
         setCheckboxEventListener(projects[0]);
         setViewTaskEventListener(projects[0]);
-        setRemoveTaskEventListener(projects[0]);
+        setRemoveTaskEventListener(projects[0], 0);
 
         // Set event listener
         projectItem.forEach((project) => {
@@ -186,7 +210,7 @@ const event = (() => {
 
                 setCheckboxEventListener(projects[projectIndex]);
                 setViewTaskEventListener(projects[projectIndex]);
-                setRemoveTaskEventListener(projects[projectIndex]);
+                setRemoveTaskEventListener(projects[projectIndex], projectIndex);
             });
         });
     };
