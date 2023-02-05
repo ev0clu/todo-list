@@ -1,5 +1,5 @@
 import './assets/style.css';
 import controller from './modules/controller';
+import event from './modules/event';
 
-controller.openProjectModalEventListener();
-controller.openTaskModalEventListener();
+event.initialEventListener();

@@ -523,7 +523,7 @@ main {
 }
 
 .task-item-right .material-symbols-outlined:hover,
-#btn-close-view-task-modal .material-symbols-outlined:hover {
+.btn-close-view-task-modal .material-symbols-outlined:hover {
     font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;
     cursor: pointer;
 }
@@ -531,7 +531,7 @@ main {
 .btn-task-view,
 .btn-task-edit,
 .btn-task-remove,
-#btn-close-view-task-modal {
+.btn-close-view-task-modal {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -596,7 +596,7 @@ main {
     width: 50%;
 }
 
-#btn-close-view-task-modal {
+.btn-close-view-task-modal {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -605,7 +605,7 @@ main {
     top: 5%;
 }
 
-#btn-close-view-task-modal .material-symbols-outlined {
+.btn-close-view-task-modal .material-symbols-outlined {
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
 }
 

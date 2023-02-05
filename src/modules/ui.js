@@ -53,14 +53,27 @@ const ui = (() => {
         return cancelButton;
     };
 
-    const toggleNodeState = () => {
-        const header = document.querySelector('header');
-        const main = document.querySelector('main');
-        const footer = document.querySelector('footer');
+    const createCheckbox = (projectName, taskName, status) => {
+        const taskCheckbox = document.createElement('input');
+        taskCheckbox.name = `${projectName}${taskName}`;
+        taskCheckbox.id = `${projectName}${taskName}`;
+        taskCheckbox.type = 'checkbox';
+        taskCheckbox.checked = status;
+        taskCheckbox.classList.add('task-checkbox');
 
-        header.classList.toggle('inactive');
-        main.classList.toggle('inactive');
-        footer.classList.toggle('inactive');
+        return taskCheckbox;
+    };
+
+    const createSpanButton = (buttonName, buttonType) => {
+        const button = document.createElement('button');
+        button.classList.add(buttonName);
+        const buttonIcon = document.createElement('span');
+        buttonIcon.classList.add('material-symbols-outlined');
+        buttonIcon.textContent = buttonType;
+
+        button.appendChild(buttonIcon);
+
+        return button;
     };
 
     // Project UI
@@ -90,58 +103,25 @@ const ui = (() => {
         projectModalDiv.appendChild(buttonDiv);
     };
 
-    const removeProjectModal = () => {
-        const projectModalContainer = document.getElementById('project-modal-container');
-        const newProjectButton = document.getElementById('btn-new-project');
-        projectModalContainer.textContent = '';
-        newProjectButton.style.display = 'block';
-    };
-
     const createProjectItem = (project, index) => {
         const projectItem = document.createElement('li');
         projectItem.classList.add('project-item');
         projectItem.setAttribute('data-index', `${index}`);
 
-        const buttonProjectItemLeft = document.createElement('button');
-        buttonProjectItemLeft.classList.add('project-item-left');
-
-        const projectItemIcon = document.createElement('span');
-        projectItemIcon.classList.add('material-symbols-outlined');
-        projectItemIcon.textContent = 'checklist';
-
+        const buttonProjectItemLeft = createSpanButton('project-item-left', 'checklist');
         const projectName = document.createElement('p');
         projectName.textContent = project.getProjectName();
+        buttonProjectItemLeft.appendChild(projectName);
 
-        const buttonProjectItemRight = document.createElement('button');
-        buttonProjectItemRight.classList.add('project-item-right');
+        const buttonProjectItemRight = createSpanButton('project-item-right', 'delete');
 
-        const projectRemoveIcon = document.createElement('span');
-        projectRemoveIcon.classList.add('material-symbols-outlined');
-        projectRemoveIcon.textContent = 'delete';
-
-        buttonProjectItemLeft.append(projectItemIcon, projectName);
-        buttonProjectItemRight.appendChild(projectRemoveIcon);
         projectItem.append(buttonProjectItemLeft, buttonProjectItemRight);
 
         return projectItem;
     };
 
-    const updateProjectList = (projectList, projectField) => {
-        let index = 0;
-        projectList.forEach((project) => {
-            projectField.appendChild(createProjectItem(project, index));
-            index += 1;
-        });
-    };
-
-    const removeProjectSelection = (projectList) => {
-        projectList.forEach((item) => {
-            item.classList.remove('item-selected');
-        });
-    };
-
     // Task UI
-    const createViewTaskModal = (name, details, date, prio) => {
+    const createViewTaskModal = (name, details, date, prio, status) => {
         const taskViewContainer = document.getElementById('task-view-container');
 
         const taskViewDiv = document.createElement('div');
@@ -179,42 +159,15 @@ const ui = (() => {
         priority.textContent = prio;
         priorityDiv.append(priorityTitle, priority);
 
-        const closeButton = document.createElement('button');
-        closeButton.id = 'btn-close-view-task-modal';
-        const closeButtonIcon = document.createElement('span');
-        closeButtonIcon.classList.add('material-symbols-outlined');
-        closeButtonIcon.textContent = 'cancel';
-        closeButton.appendChild(closeButtonIcon);
-
         taskInfo.appendChild(descriptionDiv);
         taskInfo.appendChild(dueDateDiv);
         taskInfo.appendChild(priorityDiv);
 
-        taskViewDiv.appendChild(closeButton);
+        taskViewDiv.appendChild(createSpanButton('btn-close-view-task-modal', 'cancel'));
         taskViewDiv.appendChild(titleDiv);
         taskViewDiv.appendChild(taskInfo);
 
         taskViewContainer.appendChild(taskViewDiv);
-    };
-
-    const removeViewTaskModal = () => {
-        const taskViewContainer = document.getElementById('task-view-container');
-        taskViewContainer.textContent = '';
-    };
-
-    const toggleCheckboxLabelState = (id, isChecked) => {
-        const label = document.querySelector(`label[for="${id}"]`);
-
-        if (isChecked) {
-            label.classList.add('task-done');
-        } else {
-            label.classList.remove('task-done');
-        }
-    };
-
-    const addTaskHeaderText = (projectName) => {
-        const taskContent = document.getElementById('task-content');
-        taskContent.children[0].textContent = projectName;
     };
 
     const createTaskItem = (projectName, checkStatus, taskName, index, dueDate, priority) => {
@@ -225,17 +178,6 @@ const ui = (() => {
 
         const taskItemLeft = document.createElement('div');
         taskItemLeft.classList.add('task-item-left');
-        const taskCheckbox = document.createElement('input');
-        taskCheckbox.name = `${projectName}${taskName}`;
-        taskCheckbox.id = `${projectName}${taskName}`;
-        taskCheckbox.type = 'checkbox';
-        taskCheckbox.checked = checkStatus;
-        taskCheckbox.classList.add('task-checkbox');
-
-        const taskCheckboxLabel = createLabel(`${projectName}${taskName}`, taskName);
-        if (taskCheckbox.checked) {
-            taskCheckboxLabel.classList.add('task-done');
-        }
 
         const taskItemMiddle = document.createElement('div');
         taskItemMiddle.classList.add('task-item-middle');
@@ -243,60 +185,25 @@ const ui = (() => {
 
         const taskItemRight = document.createElement('div');
         taskItemRight.classList.add('task-item-right');
-        const taskViewButton = document.createElement('button');
-        taskViewButton.classList.add('btn-task-view');
-        const taskViewIcon = document.createElement('span');
-        taskViewIcon.classList.add('material-symbols-outlined');
-        taskViewIcon.textContent = 'visibility';
 
-        const taskEditButton = document.createElement('button');
-        taskEditButton.classList.add('btn-task-edit');
-        const taskEditIcon = document.createElement('span');
-        taskEditIcon.classList.add('material-symbols-outlined');
-        taskEditIcon.textContent = 'edit';
+        const taskCheckbox = createCheckbox(projectName, taskName, checkStatus);
+        const taskCheckboxLabel = createLabel(`${projectName}${taskName}`, taskName);
 
-        const taskRemoveButton = document.createElement('button');
-        taskRemoveButton.classList.add('btn-task-remove');
-        const taskRemoveIcon = document.createElement('span');
-        taskRemoveIcon.classList.add('material-symbols-outlined');
-        taskRemoveIcon.textContent = 'delete';
+        if (taskCheckbox.checked) {
+            taskCheckboxLabel.classList.add('task-done');
+        }
 
         taskItemLeft.append(taskCheckbox, taskCheckboxLabel);
 
-        taskViewButton.appendChild(taskViewIcon);
-        taskEditButton.appendChild(taskEditIcon);
-        taskRemoveButton.appendChild(taskRemoveIcon);
-
-        taskItemRight.append(taskViewButton, taskEditButton, taskRemoveButton);
+        taskItemRight.append(
+            createSpanButton('btn-task-view', 'visibility'),
+            createSpanButton('btn-task-edit', 'edit'),
+            createSpanButton('btn-task-remove', 'delete')
+        );
 
         taskItem.append(taskItemLeft, taskItemMiddle, taskItemRight);
 
         return taskItem;
-    };
-
-    const updateTaskList = (projectName, checkStatus, taskName, index, dueDate, priority) => {
-        const taskField = document.getElementById('task-field');
-
-        taskField.appendChild(
-            createTaskItem(projectName, checkStatus, taskName, index, dueDate, priority)
-        );
-
-        /*
-        for (let i = 0; i < tasks.length; i++) {
-            console.log('task name: ', project.getTaskName(i));
-            console.log('task info: ', project.getTaskDescription(i));
-            console.log('task date: ', project.getTaskDueDate(i));
-            console.log('task prio: ', project.getTaskPriority(i));
-        }
-*/
-        /*console.log('project name: ', project.getProjectName());
-
-        for (let i = 0; i < tasks.length; i++) {
-            console.log('task name: ', project.getTaskName(i));
-            console.log('task info: ', project.getTaskDescription(i));
-            console.log('task date: ', project.getTaskDueDate(i));
-            console.log('task prio: ', project.getTaskPriority(i));
-        }*/
     };
 
     const createTaskModal = () => {
@@ -383,21 +290,6 @@ const ui = (() => {
         taskModalContainer.appendChild(taskModalDiv);
     };
 
-    const removeTaskModal = () => {
-        const taskModalContainer = document.getElementById('task-modal-container');
-        taskModalContainer.textContent = '';
-    };
-
-    const toggleNewTaskButton = (isProject) => {
-        const newTaskButton = document.getElementById('btn-new-task');
-
-        if (isProject > 0) {
-            newTaskButton.style.display = 'flex';
-        } else {
-            newTaskButton.style.display = 'none';
-        }
-    };
-
     const errorMsgTaskExist = () => {
         const errorMsg = document.getElementById('task-warning');
         errorMsg.textContent = 'Task already exist';
@@ -412,20 +304,12 @@ const ui = (() => {
         errorMsgProjectExist,
         errorMsgProjectFieldEmpty,
         createProjectModal,
-        removeProjectModal,
-        updateProjectList,
-        removeProjectSelection,
-        createViewTaskModal,
-        removeViewTaskModal,
-        toggleNodeState,
-        toggleCheckboxLabelState,
-        addTaskHeaderText,
-        updateTaskList,
-        createTaskModal,
-        removeTaskModal,
-        toggleNewTaskButton,
+        createProjectItem,
         errorMsgTaskExist,
-        errorMsgTaskFieldEmpty
+        errorMsgTaskFieldEmpty,
+        createTaskModal,
+        createTaskItem,
+        createViewTaskModal
     };
 })();
 

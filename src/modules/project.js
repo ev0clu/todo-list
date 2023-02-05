@@ -10,6 +10,7 @@ const Project = (name) => {
     const getTaskPriority = (i) => getTasks()[i].priority;
     const getTaskStatus = (i) => getTasks()[i].status;
 
+    const removeTask = (index) => getTasks().splice(index, 1);
     const isTaskExist = (newTask) => getTasks().some((task) => task.name === newTask);
 
     const toggleTaskStatus = (i, newStatus) => {
@@ -26,6 +27,7 @@ const Project = (name) => {
         getTaskDueDate,
         getTaskPriority,
         getTaskStatus,
+        removeTask,
         isTaskExist,
         toggleTaskStatus
     };
