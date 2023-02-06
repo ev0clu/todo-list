@@ -24,7 +24,6 @@ const event = (() => {
                 const taskIndex = task.parentNode.parentNode.dataset.index;
                 newTaskButton.style.display = 'none';
                 controller.removeProjectModal();
-                controller.removeTaskModal();
                 controller.toggleNodeState();
 
                 ui.createViewTaskModal(
@@ -39,27 +38,109 @@ const event = (() => {
         });
     };
 
+    const setEditTaskModalButtonsEventListener = (taskIndex) => {
+        const formTaskModal = document.querySelector('form');
+        const cancelButton = document.getElementById('btn-cancel-task');
+
+        const taskTitleInput = document.getElementById('task-title-input');
+        const taskDescriptionInput = document.getElementById('task-description-input');
+        const taskDueDateInput = document.getElementById('task-duedate-input');
+        const taskPriorityInputs = document.querySelectorAll('.task-priority');
+
+        const projectList = document.querySelectorAll('.project-item');
+
+        formTaskModal.addEventListener('submit', (e) => {
+            // default button action should not be taken
+            // button does not let to 'submit' the page
+            e.preventDefault();
+
+            for (let i = 0; i < projectList.length; i++) {
+                if (projectList[i].classList.contains('item-selected')) {
+                    const projectIndex = projectList[i].dataset.index;
+                    const projects = projectArray.getProjects();
+                    const project = projects[projectIndex];
+
+                    if (project.isTaskExist(taskTitleInput.value)) {
+                        if (
+                            project.getTasksName().indexOf(taskTitleInput.value) !==
+                            Number(taskIndex)
+                        ) {
+                            ui.errorMsgTaskExist();
+                        } else {
+                            const taskPriorityInput =
+                                controller.getTaskPriority(taskPriorityInputs);
+
+                            controller.replaceTask(
+                                project,
+                                taskIndex,
+                                taskTitleInput.value,
+                                taskDescriptionInput.value,
+                                taskDueDateInput.value,
+                                taskPriorityInput
+                            );
+                            controller.removeTaskModal();
+                            controller.toggleNodeState();
+                            controller.toggleNewTaskButton(projectArray.getProjects().length);
+                            break;
+                        }
+                    } else if (taskTitleInput.value.match(/^ *$/) !== null) {
+                        ui.errorMsgTaskFieldEmpty();
+                    } else {
+                        const taskPriorityInput = controller.getTaskPriority(taskPriorityInputs);
+
+                        controller.replaceTask(
+                            project,
+                            taskIndex,
+                            taskTitleInput.value,
+                            taskDescriptionInput.value,
+                            taskDueDateInput.value,
+                            taskPriorityInput
+                        );
+                        controller.removeTaskModal();
+                        controller.toggleNodeState();
+                        controller.toggleNewTaskButton(projectArray.getProjects().length);
+                        break;
+                    }
+                }
+            }
+        });
+
+        cancelButton.addEventListener('click', (e) => {
+            // default button action should not be taken
+            // button does not check 'input's required'
+            e.preventDefault();
+            controller.removeTaskModal();
+            controller.toggleNodeState();
+            controller.toggleNewTaskButton(projectArray.getProjects().length);
+        });
+    };
+
     const setEditTaskEventListener = (project) => {
-        const taskViewButtons = document.querySelectorAll('.btn-task-view');
+        const taskEditButtons = document.querySelectorAll('.btn-task-edit');
         const newTaskButton = document.getElementById('btn-new-task');
 
         // Set event listener
-        taskViewButtons.forEach((task) => {
+        taskEditButtons.forEach((task) => {
             task.addEventListener('click', () => {
-                const taskIndex = task.parentNode.parentNode.dataset.index;
                 newTaskButton.style.display = 'none';
+
+                const taskIndex = task.parentNode.parentNode.dataset.index;
+                const taskTitle = project.getTaskName(taskIndex);
+                const taskDescription = project.getTaskDescription(taskIndex);
+                const taskDueDate = project.getTaskDueDate(taskIndex);
+                const taskPriority = project.getTaskPriority(taskIndex);
+
                 controller.removeProjectModal();
-                controller.removeTaskModal();
+                controller.openTaskModal();
+                controller.loadTaskInformations(
+                    taskTitle,
+                    taskDescription,
+                    taskDueDate,
+                    taskPriority
+                );
                 controller.toggleNodeState();
 
-                ui.createViewTaskModal(
-                    project.getTaskName(taskIndex),
-                    project.getTaskDescription(taskIndex),
-                    project.getTaskDueDate(taskIndex),
-                    project.getTaskPriority(taskIndex)
-                );
-
-                setViewTaskModalCloseButtonsEventListener();
+                setEditTaskModalButtonsEventListener(taskIndex);
             });
         });
     };
@@ -114,7 +195,7 @@ const event = (() => {
 
         const taskTitleInput = document.getElementById('task-title-input');
         const taskDescriptionInput = document.getElementById('task-description-input');
-        const taskDueDateInput = document.getElementById('task-due-date-input');
+        const taskDueDateInput = document.getElementById('task-duedate-input');
         const taskPriorityInputs = document.querySelectorAll('.task-priority');
 
         const projectList = document.querySelectorAll('.project-item');
@@ -149,6 +230,7 @@ const event = (() => {
                         controller.toggleNewTaskButton(projectArray.getProjects().length);
                         setCheckboxEventListener(project);
                         setViewTaskEventListener(project);
+                        setEditTaskEventListener(project);
                         setRemoveTaskEventListener(project, projectIndex);
                         break;
                     }

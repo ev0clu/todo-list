@@ -15,11 +15,22 @@ const controller = (() => {
         footer.classList.toggle('inactive');
     };
 
-    const getTaskPriority = (taskPriority) => {
+    const getTaskPriorityRadioButton = (taskPriorityList, taskPriority) => {
+        let radioButton = '';
+        for (let i = 0; i < taskPriorityList.length; i++) {
+            if (taskPriorityList[i].id.indexOf(taskPriority) !== -1) {
+                radioButton = taskPriorityList[i];
+                break;
+            }
+        }
+        return radioButton;
+    };
+
+    const getTaskPriority = (taskPriorityList) => {
         let priority = '';
-        for (let i = 0; i < taskPriority.length; i++) {
-            if (taskPriority[i].checked) {
-                switch (taskPriority[i].id) {
+        for (let i = 0; i < taskPriorityList.length; i++) {
+            if (taskPriorityList[i].checked) {
+                switch (taskPriorityList[i].id) {
                     case 'task-priority-low':
                         priority = 'low';
                         break;
@@ -51,6 +62,15 @@ const controller = (() => {
     const addNewTask = (project, title, description, dueDate, priority) => {
         const newTask = Task(title, description, dueDate, priority);
         project.addTask(newTask);
+    };
+
+    const replaceTask = (project, taskIndex, newName, newDescription, newDueDate, newPriority) => {
+        project.setTaskName(taskIndex, newName);
+        project.setTaskDescription(taskIndex, newDescription);
+        project.seTaskDueDate(taskIndex, newDueDate);
+        project.setTaskPriority(taskIndex, newPriority);
+
+        ui.replaceTaskItem(taskIndex, newName, newDueDate, newPriority);
     };
 
     const removeTaskModal = () => {
@@ -89,6 +109,29 @@ const controller = (() => {
         taskViewContainer.textContent = '';
     };
 
+    const loadTaskInformations = (title, description, dueDate, priority) => {
+        const taskTitleInput = document.getElementById('task-title-input');
+        const taskDescriptionInput = document.getElementById('task-description-input');
+        const taskDueDateInput = document.getElementById('task-duedate-input');
+        const taskPriorityInputs = document.querySelectorAll('.task-priority');
+
+        taskTitleInput.value = title;
+        taskDescriptionInput.value = description;
+        taskDueDateInput.value = dueDate;
+        const selectedRadioButton = getTaskPriorityRadioButton(taskPriorityInputs, priority);
+        selectedRadioButton.checked = true;
+    };
+
+    const toggleNewTaskButton = (isProject) => {
+        const newTaskButton = document.getElementById('btn-new-task');
+
+        if (isProject > 0) {
+            newTaskButton.style.display = 'flex';
+        } else {
+            newTaskButton.style.display = 'none';
+        }
+    };
+
     const addNewProject = (projectName) => {
         const newProject = Project(projectName);
         projectArray.addProject(newProject);
@@ -123,16 +166,6 @@ const controller = (() => {
         });
     };
 
-    const toggleNewTaskButton = (isProject) => {
-        const newTaskButton = document.getElementById('btn-new-task');
-
-        if (isProject > 0) {
-            newTaskButton.style.display = 'flex';
-        } else {
-            newTaskButton.style.display = 'none';
-        }
-    };
-
     return {
         getTaskPriority,
         toggleNodeState,
@@ -141,7 +174,9 @@ const controller = (() => {
         updateProjectList,
         removeProjectSelection,
         addNewTask,
+        replaceTask,
         openTaskModal,
+        loadTaskInformations,
         addTaskHeaderText,
         updateTaskList,
         removeTaskModal,

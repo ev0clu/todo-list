@@ -340,7 +340,7 @@ main {
 #project-name-input,
 #task-title-input,
 #task-description-input,
-#task-due-date-input {
+#task-duedate-input {
     font-family: 'Hind Siliguri', sans-serif, 'Segoe UI', Helvetica, Arial, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', system-ui;
     border-radius: 8px;
@@ -356,7 +356,7 @@ main {
 
 #task-title-input,
 #task-description-input,
-#task-due-date-input {
+#task-duedate-input {
     font-size: 1rem;
     padding: 0.2rem 0.4rem 0.2rem 0.4rem;
 }

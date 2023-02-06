@@ -9,6 +9,24 @@ const Project = (name) => {
     const getTaskDueDate = (i) => getTasks()[i].dueDate;
     const getTaskPriority = (i) => getTasks()[i].priority;
     const getTaskStatus = (i) => getTasks()[i].status;
+    const getTasksName = () => getTasks().map((task) => task.name);
+
+    const setTaskName = (i, newName) => {
+        getTasks()[i].name = newName;
+        return getTasks()[i].name;
+    };
+    const setTaskDescription = (i, newDescription) => {
+        getTasks()[i].description = newDescription;
+        return getTasks()[i].description;
+    };
+    const seTaskDueDate = (i, newDueDate) => {
+        getTasks()[i].dueDate = newDueDate;
+        return getTasks()[i].dueDate;
+    };
+    const setTaskPriority = (i, newPriority) => {
+        getTasks()[i].priority = newPriority;
+        return getTasks()[i].priority;
+    };
 
     const removeTask = (index) => getTasks().splice(index, 1);
     const isTaskExist = (newTask) => getTasks().some((task) => task.name === newTask);
@@ -27,6 +45,11 @@ const Project = (name) => {
         getTaskDueDate,
         getTaskPriority,
         getTaskStatus,
+        getTasksName,
+        setTaskName,
+        setTaskDescription,
+        seTaskDueDate,
+        setTaskPriority,
         removeTask,
         isTaskExist,
         toggleTaskStatus

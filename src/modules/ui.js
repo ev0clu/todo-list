@@ -53,10 +53,10 @@ const ui = (() => {
         return cancelButton;
     };
 
-    const createCheckbox = (projectName, taskName, status) => {
+    const createCheckbox = (id, status) => {
         const taskCheckbox = document.createElement('input');
-        taskCheckbox.name = `${projectName}${taskName}`;
-        taskCheckbox.id = `${projectName}${taskName}`;
+        taskCheckbox.name = id;
+        taskCheckbox.id = id;
         taskCheckbox.type = 'checkbox';
         taskCheckbox.checked = status;
         taskCheckbox.classList.add('task-checkbox');
@@ -170,6 +170,18 @@ const ui = (() => {
         taskViewContainer.appendChild(taskViewDiv);
     };
 
+    const generateID = (length) => {
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const charactersLength = characters.length;
+        let counter = 0;
+        while (counter < length) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            counter += 1;
+        }
+        return result;
+    };
+
     const createTaskItem = (projectName, checkStatus, taskName, index, dueDate, priority) => {
         const taskItem = document.createElement('li');
         taskItem.classList.add('task-item');
@@ -186,8 +198,9 @@ const ui = (() => {
         const taskItemRight = document.createElement('div');
         taskItemRight.classList.add('task-item-right');
 
-        const taskCheckbox = createCheckbox(projectName, taskName, checkStatus);
-        const taskCheckboxLabel = createLabel(`${projectName}${taskName}`, taskName);
+        const taskId = `${projectName}${generateID(10)}`;
+        const taskCheckbox = createCheckbox(taskId, checkStatus);
+        const taskCheckboxLabel = createLabel(taskId, taskName);
 
         if (taskCheckbox.checked) {
             taskCheckboxLabel.classList.add('task-done');
@@ -204,6 +217,15 @@ const ui = (() => {
         taskItem.append(taskItemLeft, taskItemMiddle, taskItemRight);
 
         return taskItem;
+    };
+
+    const replaceTaskItem = (taskIndex, newName, newDueDate, newPriority) => {
+        const taskItem = document.querySelectorAll('.task-item');
+
+        taskItem[taskIndex].firstChild.lastChild.textContent = newName;
+        taskItem[taskIndex].children[1].textContent = newDueDate;
+        taskItem[taskIndex].className = '';
+        taskItem[taskIndex].className = `task-item priority-${newPriority}`;
     };
 
     const createTaskModal = () => {
@@ -241,12 +263,12 @@ const ui = (() => {
 
         const dueDateDiv = document.createElement('div');
         dueDateDiv.classList.add('task-modal-input');
-        dueDateDiv.appendChild(createLabel('task-due-date-input', 'Due Date*'));
+        dueDateDiv.appendChild(createLabel('task-duedate-input', 'Due Date*'));
         dueDateDiv.appendChild(
             createInput(
-                'task-due-date-input',
-                'task-due-date-input',
-                'task-due-date-input',
+                'task-duedate-input',
+                'task-duedate-input',
+                'task-duedate-input',
                 'date',
                 true
             )
@@ -309,6 +331,7 @@ const ui = (() => {
         errorMsgTaskFieldEmpty,
         createTaskModal,
         createTaskItem,
+        replaceTaskItem,
         createViewTaskModal
     };
 })();
