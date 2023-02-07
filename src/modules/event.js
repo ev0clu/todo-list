@@ -279,6 +279,7 @@ const event = (() => {
 
         setCheckboxEventListener(projects[0]);
         setViewTaskEventListener(projects[0]);
+        setEditTaskEventListener(projects[0]);
         setRemoveTaskEventListener(projects[0], 0);
 
         // Set event listener
@@ -295,6 +296,7 @@ const event = (() => {
 
                 setCheckboxEventListener(projects[projectIndex]);
                 setViewTaskEventListener(projects[projectIndex]);
+                setEditTaskEventListener(projects[projectIndex]);
                 setRemoveTaskEventListener(projects[projectIndex], projectIndex);
             });
         });

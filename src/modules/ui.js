@@ -182,7 +182,7 @@ const ui = (() => {
         return result;
     };
 
-    const createTaskItem = (projectName, checkStatus, taskName, index, dueDate, priority) => {
+    const createTaskItem = (checkStatus, taskName, index, dueDate, priority) => {
         const taskItem = document.createElement('li');
         taskItem.classList.add('task-item');
         taskItem.setAttribute('data-index', `${index}`);
@@ -198,7 +198,7 @@ const ui = (() => {
         const taskItemRight = document.createElement('div');
         taskItemRight.classList.add('task-item-right');
 
-        const taskId = `${projectName}${generateID(10)}`;
+        const taskId = `${index}${generateID(10)}`;
         const taskCheckbox = createCheckbox(taskId, checkStatus);
         const taskCheckboxLabel = createLabel(taskId, taskName);
 

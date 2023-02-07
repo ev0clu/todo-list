@@ -88,7 +88,6 @@ const controller = (() => {
         for (let i = 0; i < project.getTasks().length; i++) {
             taskField.appendChild(
                 ui.createTaskItem(
-                    project.getProjectName(),
                     project.getTaskStatus(i),
                     project.getTaskName(i),
                     i,
