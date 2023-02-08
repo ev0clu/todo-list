@@ -198,8 +198,10 @@ main {
     flex-direction: row;
     align-items: center;
     gap: 0.5rem;
-    height: 2rem;
+    height: 2.5rem;
     font-size: 1.5rem;
+    padding-left: 0.3rem;
+    border-radius: 8px;
 }
 
 #nav-inbox img,
@@ -239,14 +241,17 @@ main {
     font-size: 1rem;
 }
 
+.nav-item:hover,
 .project-item:hover {
     background-color: var(--item-color-hover);
 }
 
+.nav-item:hover,
 .project-item button:hover {
     cursor: pointer;
 }
 
+.nav-item:active,
 .project-item:active {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }

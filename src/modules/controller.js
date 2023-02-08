@@ -1,10 +1,9 @@
 import ui from './ui';
 import { Project, projectArray } from './project';
 import Task from './task';
+import { format, compareAsc } from 'date-fns';
 
 const controller = (() => {
-    // Task controller
-
     const toggleNodeState = () => {
         const header = document.querySelector('header');
         const main = document.querySelector('main');
@@ -15,6 +14,27 @@ const controller = (() => {
         footer.classList.toggle('inactive');
     };
 
+    // Nav controller
+    const prepareInboxTasks = () => {
+        const taskField = document.getElementById('task-field');
+        taskField.textContent = '';
+
+        const tasksArray = [];
+
+        const projects = projectArray.getProjects();
+
+        for (let i = 0; i < projects.length; i++) {
+            for (let j = 0; j < projects[i].getTasks().length; j++) {
+                tasksArray.push(projects[i].getTasks()[j]);
+            }
+        }
+
+        const sortedTasks = tasksArray.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+
+        return sortedTasks;
+    };
+
+    // Task controller
     const getTaskPriorityRadioButton = (taskPriorityList, taskPriority) => {
         let radioButton = '';
         for (let i = 0; i < taskPriorityList.length; i++) {
@@ -78,21 +98,22 @@ const controller = (() => {
         taskModalContainer.textContent = '';
     };
 
-    const updateTaskList = (projectIndex) => {
+    const updateTaskList = (projects, projectIndex, itemSelected) => {
         const taskField = document.getElementById('task-field');
-        taskField.textContent = '';
 
-        const projects = projectArray.getProjects();
-        const project = projects[projectIndex];
+        if (itemSelected === 'project-item') {
+            taskField.textContent = '';
+        }
 
-        for (let i = 0; i < project.getTasks().length; i++) {
+        for (let i = 0; i < projects[projectIndex].getTasks().length; i++) {
             taskField.appendChild(
                 ui.createTaskItem(
-                    project.getTaskStatus(i),
-                    project.getTaskName(i),
+                    projects[projectIndex].getTaskStatus(i),
+                    projects[projectIndex].getTaskName(i),
+                    projectIndex,
                     i,
-                    project.getTaskDueDate(i),
-                    project.getTaskPriority(i)
+                    projects[projectIndex].getTaskDueDate(i),
+                    projects[projectIndex].getTaskPriority(i)
                 )
             );
         }
@@ -126,11 +147,12 @@ const controller = (() => {
 
         if (isProject > 0) {
             newTaskButton.style.display = 'flex';
-        } else {
+        } else if (isProject <= 0) {
             newTaskButton.style.display = 'none';
         }
     };
 
+    // Project controller
     const addNewProject = (projectName) => {
         const newProject = Project(projectName);
         projectArray.addProject(newProject);
@@ -159,19 +181,20 @@ const controller = (() => {
         });
     };
 
-    const removeProjectSelection = (projectList) => {
-        projectList.forEach((item) => {
+    const removeItemSelection = (itemList) => {
+        itemList.forEach((item) => {
             item.classList.remove('item-selected');
         });
     };
 
     return {
+        prepareInboxTasks,
         getTaskPriority,
         toggleNodeState,
         addNewProject,
         removeProjectModal,
         updateProjectList,
-        removeProjectSelection,
+        removeItemSelection,
         addNewTask,
         replaceTask,
         openTaskModal,

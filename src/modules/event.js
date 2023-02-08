@@ -3,6 +3,7 @@ import ui from './ui';
 import { projectArray } from './project';
 
 const event = (() => {
+    // Task events
     const setViewTaskModalCloseButtonsEventListener = () => {
         const closeButton = document.querySelector('.btn-close-view-task-modal');
 
@@ -14,23 +15,24 @@ const event = (() => {
         });
     };
 
-    const setViewTaskEventListener = (project) => {
+    const setViewTaskEventListener = (projects) => {
         const taskViewButtons = document.querySelectorAll('.btn-task-view');
         const newTaskButton = document.getElementById('btn-new-task');
 
         // Set event listener
         taskViewButtons.forEach((task) => {
             task.addEventListener('click', () => {
-                const taskIndex = task.parentNode.parentNode.dataset.index;
+                const taskIndex = task.parentNode.parentNode.dataset.taskindex;
+                const projectIndex = task.parentNode.parentNode.dataset.projectindex;
                 newTaskButton.style.display = 'none';
                 controller.removeProjectModal();
                 controller.toggleNodeState();
 
                 ui.createViewTaskModal(
-                    project.getTaskName(taskIndex),
-                    project.getTaskDescription(taskIndex),
-                    project.getTaskDueDate(taskIndex),
-                    project.getTaskPriority(taskIndex)
+                    projects[projectIndex].getTaskName(taskIndex),
+                    projects[projectIndex].getTaskDescription(taskIndex),
+                    projects[projectIndex].getTaskDueDate(taskIndex),
+                    projects[projectIndex].getTaskPriority(taskIndex)
                 );
 
                 setViewTaskModalCloseButtonsEventListener();
@@ -38,7 +40,7 @@ const event = (() => {
         });
     };
 
-    const setEditTaskModalButtonsEventListener = (taskIndex) => {
+    const setEditTaskModalButtonsEventListener = (projectIndex, taskIndex) => {
         const formTaskModal = document.querySelector('form');
         const cancelButton = document.getElementById('btn-cancel-task');
 
@@ -47,61 +49,48 @@ const event = (() => {
         const taskDueDateInput = document.getElementById('task-duedate-input');
         const taskPriorityInputs = document.querySelectorAll('.task-priority');
 
-        const projectList = document.querySelectorAll('.project-item');
-
         formTaskModal.addEventListener('submit', (e) => {
             // default button action should not be taken
             // button does not let to 'submit' the page
             e.preventDefault();
 
-            for (let i = 0; i < projectList.length; i++) {
-                if (projectList[i].classList.contains('item-selected')) {
-                    const projectIndex = projectList[i].dataset.index;
-                    const projects = projectArray.getProjects();
-                    const project = projects[projectIndex];
+            const projects = projectArray.getProjects();
+            const project = projects[projectIndex];
 
-                    if (project.isTaskExist(taskTitleInput.value)) {
-                        if (
-                            project.getTasksName().indexOf(taskTitleInput.value) !==
-                            Number(taskIndex)
-                        ) {
-                            ui.errorMsgTaskExist();
-                        } else {
-                            const taskPriorityInput =
-                                controller.getTaskPriority(taskPriorityInputs);
+            if (project.isTaskExist(taskTitleInput.value)) {
+                if (project.getTasksName().indexOf(taskTitleInput.value) !== Number(taskIndex)) {
+                    ui.errorMsgTaskExist();
+                } else {
+                    const taskPriorityInput = controller.getTaskPriority(taskPriorityInputs);
 
-                            controller.replaceTask(
-                                project,
-                                taskIndex,
-                                taskTitleInput.value,
-                                taskDescriptionInput.value,
-                                taskDueDateInput.value,
-                                taskPriorityInput
-                            );
-                            controller.removeTaskModal();
-                            controller.toggleNodeState();
-                            controller.toggleNewTaskButton(projectArray.getProjects().length);
-                            break;
-                        }
-                    } else if (taskTitleInput.value.match(/^ *$/) !== null) {
-                        ui.errorMsgTaskFieldEmpty();
-                    } else {
-                        const taskPriorityInput = controller.getTaskPriority(taskPriorityInputs);
-
-                        controller.replaceTask(
-                            project,
-                            taskIndex,
-                            taskTitleInput.value,
-                            taskDescriptionInput.value,
-                            taskDueDateInput.value,
-                            taskPriorityInput
-                        );
-                        controller.removeTaskModal();
-                        controller.toggleNodeState();
-                        controller.toggleNewTaskButton(projectArray.getProjects().length);
-                        break;
-                    }
+                    controller.replaceTask(
+                        project,
+                        taskIndex,
+                        taskTitleInput.value,
+                        taskDescriptionInput.value,
+                        taskDueDateInput.value,
+                        taskPriorityInput
+                    );
+                    controller.removeTaskModal();
+                    controller.toggleNodeState();
+                    controller.toggleNewTaskButton(projectArray.getProjects().length);
                 }
+            } else if (taskTitleInput.value.match(/^ *$/) !== null) {
+                ui.errorMsgTaskFieldEmpty();
+            } else {
+                const taskPriorityInput = controller.getTaskPriority(taskPriorityInputs);
+
+                controller.replaceTask(
+                    project,
+                    taskIndex,
+                    taskTitleInput.value,
+                    taskDescriptionInput.value,
+                    taskDueDateInput.value,
+                    taskPriorityInput
+                );
+                controller.removeTaskModal();
+                controller.toggleNodeState();
+                controller.toggleNewTaskButton(projectArray.getProjects().length);
             }
         });
 
@@ -115,7 +104,7 @@ const event = (() => {
         });
     };
 
-    const setEditTaskEventListener = (project) => {
+    const setEditTaskEventListener = (projects) => {
         const taskEditButtons = document.querySelectorAll('.btn-task-edit');
         const newTaskButton = document.getElementById('btn-new-task');
 
@@ -124,11 +113,12 @@ const event = (() => {
             task.addEventListener('click', () => {
                 newTaskButton.style.display = 'none';
 
-                const taskIndex = task.parentNode.parentNode.dataset.index;
-                const taskTitle = project.getTaskName(taskIndex);
-                const taskDescription = project.getTaskDescription(taskIndex);
-                const taskDueDate = project.getTaskDueDate(taskIndex);
-                const taskPriority = project.getTaskPriority(taskIndex);
+                const taskIndex = task.parentNode.parentNode.dataset.taskindex;
+                const projectIndex = task.parentNode.parentNode.dataset.projectindex;
+                const taskTitle = projects[projectIndex].getTaskName(taskIndex);
+                const taskDescription = projects[projectIndex].getTaskDescription(taskIndex);
+                const taskDueDate = projects[projectIndex].getTaskDueDate(taskIndex);
+                const taskPriority = projects[projectIndex].getTaskPriority(taskIndex);
 
                 controller.removeProjectModal();
                 controller.openTaskModal();
@@ -140,50 +130,81 @@ const event = (() => {
                 );
                 controller.toggleNodeState();
 
-                setEditTaskModalButtonsEventListener(taskIndex);
+                setEditTaskModalButtonsEventListener(projectIndex, taskIndex);
             });
         });
     };
 
-    const setCheckboxEventListener = (project) => {
+    const setCheckboxEventListener = (projects) => {
         const checkboxes = document.querySelectorAll('.task-checkbox');
 
         // Set event listener
         checkboxes.forEach((checkbox) => {
             checkbox.addEventListener('change', () => {
-                const taskId = checkbox.parentNode.parentNode.dataset.index;
+                const taskIndex = checkbox.parentNode.parentNode.dataset.taskindex;
+                const projectIndex = checkbox.parentNode.parentNode.dataset.projectindex;
 
                 if (checkbox.checked) {
                     controller.toggleCheckboxLabelState(checkbox.id, true);
-                    project.toggleTaskStatus(taskId, true);
+                    projects[projectIndex].toggleTaskStatus(taskIndex, true);
                 } else {
                     controller.toggleCheckboxLabelState(checkbox.id, false);
-                    project.toggleTaskStatus(taskId, false);
+                    projects[projectIndex].toggleTaskStatus(taskIndex, false);
                 }
             });
         });
     };
 
-    const setRemoveTaskEventListener = (project, projectIndex) => {
+    const setTaskRemoveEventListener = (projects, selectedItem) => {
         const taskRemoveButtons = document.querySelectorAll('.btn-task-remove');
         const taskField = document.getElementById('task-field');
 
         // Set event listener
         taskRemoveButtons.forEach((task) => {
             task.addEventListener('click', () => {
-                const taskIndex = task.parentNode.parentNode.dataset.index;
+                const taskIndex = task.parentNode.parentNode.dataset.taskindex;
+                const projectIndex = task.parentNode.parentNode.dataset.projectindex;
 
                 controller.removeTaskModal();
 
-                project.removeTask(taskIndex);
+                projects[projectIndex].removeTask(taskIndex);
+                taskField.textContent = '';
 
-                if (project.getTasks().length > 0) {
-                    controller.updateTaskList(projectIndex);
-                    setCheckboxEventListener(project);
-                    setViewTaskEventListener(project);
-                    setRemoveTaskEventListener(project, projectIndex);
-                } else {
-                    taskField.textContent = '';
+                if (selectedItem === 'nav-item') {
+                    let loop = false;
+                    for (let i = 0; i < projects.length; i++) {
+                        for (let j = 0; j < projects[i].getTasks().length; j++) {
+                            if (projects[i].getTasks().length > 0) {
+                                loop = true;
+                                break;
+                            }
+                        }
+                        if (loop === true) {
+                            break;
+                        }
+                    }
+                    if (loop === true) {
+                        for (let i = 0; i < projects.length; i++) {
+                            controller.updateTaskList(projects, i, 'nav-item');
+                        }
+
+                        setCheckboxEventListener(projects);
+                        setViewTaskEventListener(projects);
+                        setEditTaskEventListener(projects);
+                        setTaskRemoveEventListener(projects, 'nav-item');
+                    } else {
+                        taskField.textContent = '';
+                    }
+                } else if (selectedItem === 'project-item') {
+                    if (projects[projectIndex].getTasks().length > 0) {
+                        controller.updateTaskList(projects, projectIndex, 'project-item');
+                        setCheckboxEventListener(projects);
+                        setViewTaskEventListener(projects);
+                        setEditTaskEventListener(projects);
+                        setTaskRemoveEventListener(projects, 'project-item');
+                    } else {
+                        taskField.textContent = '';
+                    }
                 }
             });
         });
@@ -207,7 +228,7 @@ const event = (() => {
 
             for (let i = 0; i < projectList.length; i++) {
                 if (projectList[i].classList.contains('item-selected')) {
-                    const projectIndex = projectList[i].dataset.index;
+                    const projectIndex = projectList[i].dataset.projectindex;
                     const projects = projectArray.getProjects();
                     const project = projects[projectIndex];
                     if (project.isTaskExist(taskTitleInput.value)) {
@@ -224,14 +245,14 @@ const event = (() => {
                             taskDueDateInput.value,
                             taskPriorityInput
                         );
-                        controller.updateTaskList(projectIndex);
+                        controller.updateTaskList(projects, projectIndex, 'project-item');
                         controller.removeTaskModal();
                         controller.toggleNodeState();
                         controller.toggleNewTaskButton(projectArray.getProjects().length);
-                        setCheckboxEventListener(project);
-                        setViewTaskEventListener(project);
-                        setEditTaskEventListener(project);
-                        setRemoveTaskEventListener(project, projectIndex);
+                        setCheckboxEventListener(projects);
+                        setViewTaskEventListener(projects);
+                        setEditTaskEventListener(projects);
+                        setTaskRemoveEventListener(projects, 'project-item');
                         break;
                     }
                 }
@@ -261,43 +282,77 @@ const event = (() => {
         });
     };
 
-    // Project controller
+    // Project events
     const setProjectSelectionEventListener = () => {
         // Select the newly added project by default
-        const projectItemList = document.querySelectorAll('.project-item');
+        const itemList = document.querySelectorAll('li');
         const projectItem = document.querySelectorAll('.project-item-left');
         const projectField = document.getElementById('project-field');
 
         let projects = projectArray.getProjects();
         const firstProjectItem = projectField.firstChild;
 
-        controller.removeProjectSelection(projectItemList);
+        controller.removeItemSelection(itemList);
         firstProjectItem.classList.add('item-selected');
         controller.addTaskHeaderText(projects[0].getProjectName());
-        controller.updateTaskList(firstProjectItem.dataset.index);
+        controller.updateTaskList(projects, firstProjectItem.dataset.projectindex, 'project-item');
         controller.toggleNewTaskButton(projectArray.getProjects().length);
 
-        setCheckboxEventListener(projects[0]);
-        setViewTaskEventListener(projects[0]);
-        setEditTaskEventListener(projects[0]);
-        setRemoveTaskEventListener(projects[0], 0);
+        setCheckboxEventListener(projects);
+        setViewTaskEventListener(projects);
+        setEditTaskEventListener(projects);
+        setTaskRemoveEventListener(projects, 'project-item');
 
         // Set event listener
         projectItem.forEach((project) => {
             project.addEventListener('click', () => {
-                controller.removeProjectSelection(projectItemList);
+                controller.removeItemSelection(itemList);
+                controller.toggleNewTaskButton(projects.length);
                 project.parentNode.classList.add('item-selected');
                 projects = projectArray.getProjects();
-                const projectIndex = project.parentNode.dataset.index;
+
+                const projectIndex = project.parentNode.dataset.projectindex;
 
                 controller.addTaskHeaderText(projects[projectIndex].getProjectName());
+                controller.updateTaskList(projects, projectIndex, 'project-item');
 
-                controller.updateTaskList(projectIndex);
+                setCheckboxEventListener(projects);
+                setViewTaskEventListener(projects);
+                setEditTaskEventListener(projects);
+                setTaskRemoveEventListener(projects, 'project-item');
+            });
+        });
+    };
 
-                setCheckboxEventListener(projects[projectIndex]);
-                setViewTaskEventListener(projects[projectIndex]);
-                setEditTaskEventListener(projects[projectIndex]);
-                setRemoveTaskEventListener(projects[projectIndex], projectIndex);
+    const setNavItemSelectionEventListener = () => {
+        // Select the newly added project by default
+        const navList = document.querySelectorAll('.nav-item');
+
+        // Set event listener
+        navList.forEach((item) => {
+            item.addEventListener('click', () => {
+                const items = document.querySelectorAll('li');
+                controller.removeItemSelection(items);
+                controller.toggleNewTaskButton(-1);
+                item.classList.add('item-selected');
+                controller.addTaskHeaderText(item.lastElementChild.textContent);
+
+                const projects = projectArray.getProjects();
+
+                const taskField = document.getElementById('task-field');
+                taskField.textContent = '';
+
+                if (item.id === 'nav-inbox') {
+                    for (let i = 0; i < projects.length; i++) {
+                        controller.updateTaskList(projects, i, 'nav-item');
+                    }
+                    setCheckboxEventListener(projects);
+                    setViewTaskEventListener(projects);
+                    setEditTaskEventListener(projects);
+                    setTaskRemoveEventListener(projects, 'nav-item');
+                }
+
+                controller.toggleNewTaskButton(null);
             });
         });
     };
@@ -310,7 +365,7 @@ const event = (() => {
         // Set event listener
         projectRemoveButton.forEach((project) => {
             project.addEventListener('click', () => {
-                projectArray.removeProject(project.parentNode.dataset.index);
+                projectArray.removeProject(project.parentNode.dataset.projectindex);
                 projectField.textContent = '';
 
                 if (projectArray.getProjects().length > 0) {
@@ -330,6 +385,7 @@ const event = (() => {
         const cancelButton = document.getElementById('btn-cancel-project');
         const projectNameInput = document.getElementById('project-name-input');
         const newProjectButton = document.getElementById('btn-new-project');
+        const projectItemList = document.querySelectorAll('.project-item');
 
         addButton.addEventListener('click', () => {
             if (projectArray.isProjectExist(projectNameInput.value)) {
@@ -372,8 +428,12 @@ const event = (() => {
     };
 
     const initialEventListener = () => {
+        const selectedDefaultItem = document.getElementById('nav-inbox');
+        selectedDefaultItem.classList.add('item-selected');
+        controller.addTaskHeaderText(selectedDefaultItem.lastElementChild.textContent);
         openProjectModalEventListener();
         openTaskModalEventListener();
+        setNavItemSelectionEventListener();
     };
 
     return { initialEventListener };

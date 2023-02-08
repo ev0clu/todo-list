@@ -106,7 +106,7 @@ const ui = (() => {
     const createProjectItem = (project, index) => {
         const projectItem = document.createElement('li');
         projectItem.classList.add('project-item');
-        projectItem.setAttribute('data-index', `${index}`);
+        projectItem.setAttribute('data-projectindex', `${index}`);
 
         const buttonProjectItemLeft = createSpanButton('project-item-left', 'checklist');
         const projectName = document.createElement('p');
@@ -182,10 +182,11 @@ const ui = (() => {
         return result;
     };
 
-    const createTaskItem = (checkStatus, taskName, index, dueDate, priority) => {
+    const createTaskItem = (checkStatus, taskName, projectIndex, taskIndex, dueDate, priority) => {
         const taskItem = document.createElement('li');
         taskItem.classList.add('task-item');
-        taskItem.setAttribute('data-index', `${index}`);
+        taskItem.setAttribute('data-projectindex', `${projectIndex}`);
+        taskItem.setAttribute('data-taskindex', `${taskIndex}`);
         taskItem.classList.add(`priority-${priority}`);
 
         const taskItemLeft = document.createElement('div');
@@ -198,7 +199,7 @@ const ui = (() => {
         const taskItemRight = document.createElement('div');
         taskItemRight.classList.add('task-item-right');
 
-        const taskId = `${index}${generateID(10)}`;
+        const taskId = `${projectIndex}${taskIndex}${generateID(10)}`;
         const taskCheckbox = createCheckbox(taskId, checkStatus);
         const taskCheckboxLabel = createLabel(taskId, taskName);
 
