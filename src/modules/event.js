@@ -176,7 +176,11 @@ const event = (() => {
                 projects[projectIndex].removeTask(taskIndex);
                 taskField.textContent = '';
 
-                if (selectedItem === 'nav-inbox') {
+                if (
+                    selectedItem === 'nav-inbox' ||
+                    selectedItem === 'nav-today' ||
+                    selectedItem === 'nav-week'
+                ) {
                     let loop = false;
                     for (let i = 0; i < projects.length; i++) {
                         for (let j = 0; j < projects[i].getTasks().length; j++) {
@@ -191,13 +195,13 @@ const event = (() => {
                     }
                     if (loop === true) {
                         for (let i = 0; i < projects.length; i++) {
-                            controller.updateTaskList(projects, i, 'nav-inbox');
+                            controller.updateTaskList(projects, i, selectedItem);
                         }
 
                         setCheckboxEventListener(projects);
                         setViewTaskEventListener(projects);
                         setEditTaskEventListener(projects);
-                        setTaskRemoveEventListener(projects, 'nav-inbox');
+                        setTaskRemoveEventListener(projects, selectedItem);
                     } else {
                         taskField.textContent = '';
                     }
@@ -207,7 +211,7 @@ const event = (() => {
                         setCheckboxEventListener(projects);
                         setViewTaskEventListener(projects);
                         setEditTaskEventListener(projects);
-                        setTaskRemoveEventListener(projects, 'project-item');
+                        setTaskRemoveEventListener(projects, selectedItem);
                     } else {
                         taskField.textContent = '';
                     }
@@ -407,7 +411,6 @@ const event = (() => {
     const setNavItemSelectionEventListener = () => {
         // Select the newly added project by default
         const navList = document.querySelectorAll('.nav-item');
-        const newProjectButton = document.getElementById('btn-new-project');
 
         // Set event listener
         navList.forEach((item) => {
@@ -432,12 +435,16 @@ const event = (() => {
                     for (let i = 0; i < projects.length; i++) {
                         controller.updateTaskList(projects, i, 'nav-today');
                     }
+                } else if (item.id === 'nav-week') {
+                    for (let i = 0; i < projects.length; i++) {
+                        controller.updateTaskList(projects, i, 'nav-week');
+                    }
                 }
 
                 setCheckboxEventListener(projects);
                 setViewTaskEventListener(projects);
                 setEditTaskEventListener(projects);
-                setTaskRemoveEventListener(projects, 'nav-inbox');
+                setTaskRemoveEventListener(projects, item.id);
                 controller.toggleNewTaskButton(null);
             });
         });

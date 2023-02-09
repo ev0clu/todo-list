@@ -103,14 +103,14 @@ const controller = (() => {
         taskModalContainer.textContent = '';
     };
 
-    const updateTaskList = (projects, projectIndex, itemSelected) => {
+    const updateTaskList = (projects, projectIndex, selectedItem) => {
         const taskField = document.getElementById('task-field');
 
-        if (itemSelected === 'project-item') {
+        if (selectedItem === 'project-item') {
             taskField.textContent = '';
         }
 
-        if (itemSelected === 'project-item' || itemSelected === 'nav-inbox') {
+        if (selectedItem === 'project-item' || selectedItem === 'nav-inbox') {
             for (let i = 0; i < projects[projectIndex].getTasks().length; i++) {
                 taskField.appendChild(
                     ui.createTaskItem(
@@ -123,7 +123,7 @@ const controller = (() => {
                     )
                 );
             }
-        } else if (itemSelected === 'nav-today') {
+        } else if (selectedItem === 'nav-today') {
             const todayDate = format(new Date(), 'yyyy-MM-dd');
             for (let i = 0; i < projects[projectIndex].getTasks().length; i++) {
                 if (todayDate === projects[projectIndex].getTaskDueDate(i)) {
