@@ -220,13 +220,13 @@ const ui = (() => {
         return taskItem;
     };
 
-    const replaceTaskItem = (taskIndex, newName, newDueDate, newPriority) => {
-        const taskItem = document.querySelectorAll('.task-item');
+    const replaceTaskItem = (eventTarget, newName, newDueDate, newPriority) => {
+        const taskItem = eventTarget;
 
-        taskItem[taskIndex].firstChild.lastChild.textContent = newName;
-        taskItem[taskIndex].children[1].textContent = newDueDate;
-        taskItem[taskIndex].className = '';
-        taskItem[taskIndex].className = `task-item priority-${newPriority}`;
+        taskItem.firstChild.lastChild.textContent = newName;
+        taskItem.children[1].textContent = newDueDate;
+        taskItem.className = '';
+        taskItem.className = `task-item priority-${newPriority}`;
     };
 
     const createTaskModal = () => {

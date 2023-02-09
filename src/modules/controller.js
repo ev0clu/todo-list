@@ -14,26 +14,6 @@ const controller = (() => {
         footer.classList.toggle('inactive');
     };
 
-    // Nav controller
-    const prepareInboxTasks = () => {
-        const taskField = document.getElementById('task-field');
-        taskField.textContent = '';
-
-        const tasksArray = [];
-
-        const projects = projectArray.getProjects();
-
-        for (let i = 0; i < projects.length; i++) {
-            for (let j = 0; j < projects[i].getTasks().length; j++) {
-                tasksArray.push(projects[i].getTasks()[j]);
-            }
-        }
-
-        const sortedTasks = tasksArray.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-
-        return sortedTasks;
-    };
-
     // Task controller
     const getTaskPriorityRadioButton = (taskPriorityList, taskPriority) => {
         let radioButton = '';
@@ -84,13 +64,38 @@ const controller = (() => {
         project.addTask(newTask);
     };
 
-    const replaceTask = (project, taskIndex, newName, newDescription, newDueDate, newPriority) => {
+    const replaceTask = (
+        project,
+        taskIndex,
+        newName,
+        newDescription,
+        newDueDate,
+        newPriority,
+        eventTarget
+    ) => {
+        const navInbox = document.getElementById('nav-inbox');
+        const navToday = document.getElementById('nav-today');
+        const navWeek = document.getElementById('nav-week');
+        const navItem = document.querySelectorAll('.nav-item');
+
+        const todayDate = format(new Date(), 'yyyy-MM-dd');
+        //const newDate = format(new Date(newDueDate), 'dd-MM-yyyy');
+        console.log(todayDate, newDueDate);
+
         project.setTaskName(taskIndex, newName);
         project.setTaskDescription(taskIndex, newDescription);
         project.seTaskDueDate(taskIndex, newDueDate);
         project.setTaskPriority(taskIndex, newPriority);
 
-        ui.replaceTaskItem(taskIndex, newName, newDueDate, newPriority);
+        if (navToday.classList.contains('item-selected')) {
+            if (todayDate !== newDueDate) {
+                eventTarget.remove();
+            } else {
+                ui.replaceTaskItem(eventTarget, newName, newDueDate, newPriority);
+            }
+        } else {
+            ui.replaceTaskItem(eventTarget, newName, newDueDate, newPriority);
+        }
     };
 
     const removeTaskModal = () => {
@@ -105,17 +110,35 @@ const controller = (() => {
             taskField.textContent = '';
         }
 
-        for (let i = 0; i < projects[projectIndex].getTasks().length; i++) {
-            taskField.appendChild(
-                ui.createTaskItem(
-                    projects[projectIndex].getTaskStatus(i),
-                    projects[projectIndex].getTaskName(i),
-                    projectIndex,
-                    i,
-                    projects[projectIndex].getTaskDueDate(i),
-                    projects[projectIndex].getTaskPriority(i)
-                )
-            );
+        if (itemSelected === 'project-item' || itemSelected === 'nav-inbox') {
+            for (let i = 0; i < projects[projectIndex].getTasks().length; i++) {
+                taskField.appendChild(
+                    ui.createTaskItem(
+                        projects[projectIndex].getTaskStatus(i),
+                        projects[projectIndex].getTaskName(i),
+                        projectIndex,
+                        i,
+                        projects[projectIndex].getTaskDueDate(i),
+                        projects[projectIndex].getTaskPriority(i)
+                    )
+                );
+            }
+        } else if (itemSelected === 'nav-today') {
+            const todayDate = format(new Date(), 'yyyy-MM-dd');
+            for (let i = 0; i < projects[projectIndex].getTasks().length; i++) {
+                if (todayDate === projects[projectIndex].getTaskDueDate(i)) {
+                    taskField.appendChild(
+                        ui.createTaskItem(
+                            projects[projectIndex].getTaskStatus(i),
+                            projects[projectIndex].getTaskName(i),
+                            projectIndex,
+                            i,
+                            projects[projectIndex].getTaskDueDate(i),
+                            projects[projectIndex].getTaskPriority(i)
+                        )
+                    );
+                }
+            }
         }
     };
 
@@ -188,7 +211,6 @@ const controller = (() => {
     };
 
     return {
-        prepareInboxTasks,
         getTaskPriority,
         toggleNodeState,
         addNewProject,
