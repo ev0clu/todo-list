@@ -344,6 +344,7 @@ const event = (() => {
 
         // Set event listener
         projectRemoveButton.forEach((project) => {
+            const items = document.querySelectorAll('li');
             project.addEventListener('click', () => {
                 projectArray.removeProject(project.parentNode.dataset.projectindex);
                 projectField.textContent = '';
@@ -354,7 +355,21 @@ const event = (() => {
                     setProjectRemoveEventListener();
                 } else {
                     controller.toggleNewTaskButton(projectArray.getProjects().length);
-                    controller.addTaskHeaderText('');
+
+                    taskField.textContent = '';
+
+                    let index = -1;
+                    for (let i = 0; i < items.length; i++) {
+                        if (items[i].classList.contains('item-selected')) {
+                            index = i;
+                            break;
+                        }
+                    }
+                    if (index > -1) {
+                        controller.addTaskHeaderText(items[index].children[1].textContent);
+                    } else {
+                        controller.addTaskHeaderText('');
+                    }
                 }
             });
         });
@@ -407,7 +422,6 @@ const event = (() => {
     };
 
     // Other events
-
     const setNavItemSelectionEventListener = () => {
         // Select the newly added project by default
         const navList = document.querySelectorAll('.nav-item');

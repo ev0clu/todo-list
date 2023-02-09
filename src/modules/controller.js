@@ -1,9 +1,41 @@
+import { format, isWithinInterval } from 'date-fns';
 import ui from './ui';
 import { Project, projectArray } from './project';
 import Task from './task';
-import { format, compareAsc } from 'date-fns';
 
 const controller = (() => {
+    /*const isNextWeek = (newDate) => {
+        const curr = new Date(); // get current date
+        const first = curr.getDate() + 7 - curr.getDay(); // First day is the day of the month - the day of the week
+        const last = first + 7; // last day is the first day + 6
+
+        const firstDay = format(new Date(curr.setDate(first + 1)), 'yyyy-MM-dd');
+        const lastDay = format(new Date(curr.setDate(last) + 1), 'yyyy-MM-dd');
+
+        const result = isWithinInterval(newDate, {
+            start: firstDay,
+            end: lastDay
+        });
+
+        return result;
+    };*/
+    const isWeek = (newDate) => {
+        let result = false;
+
+        const curr = new Date(); // get current date
+        const first = curr.getDate() - curr.getDay() + 1; // First day is the day of the month - the day of the week
+        const last = first + 6; // last day is the first day + 6
+
+        const firstDay = format(new Date(curr.setDate(first)), 'yyyy-MM-dd');
+        const lastDay = format(new Date(curr.setDate(last)), 'yyyy-MM-dd');
+
+        if (newDate >= firstDay && newDate <= lastDay) {
+            result = true;
+        }
+
+        return result;
+    };
+
     const toggleNodeState = () => {
         const header = document.querySelector('header');
         const main = document.querySelector('main');
@@ -80,7 +112,6 @@ const controller = (() => {
 
         const todayDate = format(new Date(), 'yyyy-MM-dd');
         //const newDate = format(new Date(newDueDate), 'dd-MM-yyyy');
-        console.log(todayDate, newDueDate);
 
         project.setTaskName(taskIndex, newName);
         project.setTaskDescription(taskIndex, newDescription);
@@ -89,6 +120,12 @@ const controller = (() => {
 
         if (navToday.classList.contains('item-selected')) {
             if (todayDate !== newDueDate) {
+                eventTarget.remove();
+            } else {
+                ui.replaceTaskItem(eventTarget, newName, newDueDate, newPriority);
+            }
+        } else if (navWeek.classList.contains('item-selected')) {
+            if (!isWeek(newDueDate)) {
                 eventTarget.remove();
             } else {
                 ui.replaceTaskItem(eventTarget, newName, newDueDate, newPriority);
@@ -127,6 +164,21 @@ const controller = (() => {
             const todayDate = format(new Date(), 'yyyy-MM-dd');
             for (let i = 0; i < projects[projectIndex].getTasks().length; i++) {
                 if (todayDate === projects[projectIndex].getTaskDueDate(i)) {
+                    taskField.appendChild(
+                        ui.createTaskItem(
+                            projects[projectIndex].getTaskStatus(i),
+                            projects[projectIndex].getTaskName(i),
+                            projectIndex,
+                            i,
+                            projects[projectIndex].getTaskDueDate(i),
+                            projects[projectIndex].getTaskPriority(i)
+                        )
+                    );
+                }
+            }
+        } else if (selectedItem === 'nav-week') {
+            for (let i = 0; i < projects[projectIndex].getTasks().length; i++) {
+                if (isWeek(projects[projectIndex].getTaskDueDate(i))) {
                     taskField.appendChild(
                         ui.createTaskItem(
                             projects[projectIndex].getTaskStatus(i),
@@ -211,8 +263,8 @@ const controller = (() => {
     };
 
     return {
-        getTaskPriority,
         toggleNodeState,
+        getTaskPriority,
         addNewProject,
         removeProjectModal,
         updateProjectList,
