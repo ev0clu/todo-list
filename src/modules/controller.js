@@ -19,6 +19,23 @@ const controller = (() => {
 
         return result;
     };*/
+
+    const toggleNavBar = () => {
+        const navBar = document.getElementById('nav-bar');
+        const navToggleButton = document.querySelector('.nav-toggle');
+        if (navBar.classList.contains('active')) {
+            navBar.classList.remove('active');
+            navBar.style.width = '0';
+            navBar.style.left = '-3rem';
+            navToggleButton.textContent = 'menu';
+        } else {
+            navBar.classList.add('active');
+            navBar.style.width = '20rem';
+            navBar.style.left = '0';
+            navToggleButton.textContent = 'close';
+        }
+    };
+
     const isWeek = (newDate) => {
         let result = false;
 
@@ -237,7 +254,7 @@ const controller = (() => {
         const projectModalContainer = document.getElementById('project-modal-container');
         const newProjectButton = document.getElementById('btn-new-project');
         projectModalContainer.textContent = '';
-        newProjectButton.style.display = 'block';
+        newProjectButton.style.display = 'flex';
     };
 
     const openTaskModal = () => {
@@ -263,6 +280,7 @@ const controller = (() => {
     };
 
     return {
+        toggleNavBar,
         toggleNodeState,
         getTaskPriority,
         addNewProject,

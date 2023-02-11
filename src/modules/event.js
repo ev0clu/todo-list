@@ -358,7 +358,17 @@ const event = (() => {
 
                     taskField.textContent = '';
 
-                    let index = -1;
+                    for (let i = 0; i < items.length; i++) {
+                        if (items[i].classList.contains('item-selected')) {
+                            items[i].classList.remove('item-selected');
+                            break;
+                        }
+                    }
+                    items[0].classList.add('item-selected');
+
+                    controller.addTaskHeaderText(items[0].children[1].textContent);
+
+                    /*let index = -1;
                     for (let i = 0; i < items.length; i++) {
                         if (items[i].classList.contains('item-selected')) {
                             index = i;
@@ -369,7 +379,7 @@ const event = (() => {
                         controller.addTaskHeaderText(items[index].children[1].textContent);
                     } else {
                         controller.addTaskHeaderText('');
-                    }
+                    }*/
                 }
             });
         });
@@ -464,6 +474,13 @@ const event = (() => {
         });
     };
 
+    const toggleNavBarEventListener = () => {
+        const navToggleButton = document.getElementById('btn-nav-toggle');
+        navToggleButton.addEventListener('click', () => {
+            controller.toggleNavBar();
+        });
+    };
+
     const initialEventListener = () => {
         const selectedDefaultItem = document.getElementById('nav-inbox');
         selectedDefaultItem.classList.add('item-selected');
@@ -471,6 +488,7 @@ const event = (() => {
         openProjectModalEventListener();
         openTaskModalEventListener();
         setNavItemSelectionEventListener();
+        toggleNavBarEventListener();
     };
 
     return { initialEventListener };

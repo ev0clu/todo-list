@@ -671,3 +671,104 @@ footer {
     width: 25px;
     height: 25px;
 }
+
+#btn-nav-toggle {
+    display: none;
+}
+
+/* MEDIA QUERIES */
+@media (max-width: 640px) {
+    #btn-nav-toggle {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        color: white;
+        background: none;
+        border: none;
+        outline: inherit;
+        cursor: pointer;
+        padding: 0;
+    }
+
+    .nav-toggle {
+        font-size: 2.2rem;
+    }
+
+    #nav-bar {
+        margin-top: 4rem;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: -3rem;
+        background-color: var(--item-color-hover);
+        overflow-x: hidden;
+        transition: 0.5s;
+        flex: 0;
+        gap: 1rem;
+    }
+
+    .item-selected,
+    .nav-item:hover,
+    .project-item:hover {
+        background-color: var(--body-color);
+    }
+
+    #nav-bar li {
+        transition: 0.3s;
+    }
+
+    header {
+        justify-content: space-between;
+        font-size: 2rem;
+        padding: 1rem 1rem 1rem 1rem;
+        height: 4rem;
+    }
+
+    main {
+        /*flex-direction: column;*/
+        padding: 0;
+    }
+
+    #nav-top {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    #nav-bar,
+    #task-content {
+        padding: 1rem 1rem 1rem 1rem;
+        border: 0;
+    }
+
+    #btn-new-project {
+        height: 20px;
+        width: 20px;
+        margin-top: 0;
+    }
+
+    #task-modal-container,
+    #task-view-container {
+        top: 50%;
+        left: 50%;
+    }
+
+    #task-modal,
+    #task-modal-view {
+        width: 80%;
+    }
+
+    .project-item-right {
+        visibility: visible;
+    }
+
+    .btn-close-view-task-modal {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        right: 15%;
+        top: 5%;
+    }
+}
