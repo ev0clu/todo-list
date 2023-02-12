@@ -42,7 +42,7 @@ const controller = (() => {
 
         //firstDay = format(firstDay, 'yyyy-MM-dd');
         //lastDay = format(lastDay, 'yyyy-MM-dd');
-        console.log(format(firstDay, 'yyyy-MM-dd'), format(lastDay, 'yyyy-MM-dd'));
+        //console.log(format(firstDay, 'yyyy-MM-dd'), format(lastDay, 'yyyy-MM-dd'));
 
         if (newDate >= format(firstDay, 'yyyy-MM-dd') && newDate <= format(lastDay, 'yyyy-MM-dd')) {
             result = true;
@@ -233,8 +233,13 @@ const controller = (() => {
 
     const toggleNewTaskButton = (isProject) => {
         const newTaskButton = document.getElementById('btn-new-task');
-
-        if (isProject > 0) {
+        const itemSelected = document.querySelectorAll('li');
+        if (
+            isProject > 0 &&
+            !itemSelected[0].classList.contains('item-selected') &&
+            !itemSelected[1].classList.contains('item-selected') &&
+            !itemSelected[2].classList.contains('item-selected')
+        ) {
             newTaskButton.style.display = 'flex';
         } else if (isProject <= 0) {
             newTaskButton.style.display = 'none';
