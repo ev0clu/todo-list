@@ -4,6 +4,7 @@ import { Project, projectArray } from './project';
 import Task from './task';
 
 const controller = (() => {
+    // General controllers
     const toggleNavBar = () => {
         const navBar = document.getElementById('nav-bar');
         const navToggleButton = document.querySelector('.nav-toggle');
@@ -23,14 +24,27 @@ const controller = (() => {
     const isWeek = (newDate) => {
         let result = false;
 
-        const curr = new Date(); // get current date
-        const first = curr.getDate() - curr.getDay() + 1; // First day is the day of the month - the day of the week
-        const last = first + 6; // last day is the first day + 6
+        const today = new Date();
 
-        const firstDay = format(new Date(curr.setDate(first)), 'yyyy-MM-dd');
-        const lastDay = format(new Date(curr.setDate(last)), 'yyyy-MM-dd');
+        // Get the first day of the current week (Monday)
+        // clone date object, so we don't mutate it
+        const date = new Date(today);
+        // get day of week
+        const day = date.getDay();
+        // day of month - day of week (-6 if Sunday), otherwise +1
+        const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+        const firstDay = new Date(date.setDate(diff));
 
-        if (newDate >= firstDay && newDate <= lastDay) {
+        // Get the last day of the current week (Sunday)
+        const lastDay = new Date(firstDay);
+
+        lastDay.setDate(lastDay.getDate() + 6);
+
+        //firstDay = format(firstDay, 'yyyy-MM-dd');
+        //lastDay = format(lastDay, 'yyyy-MM-dd');
+        console.log(format(firstDay, 'yyyy-MM-dd'), format(lastDay, 'yyyy-MM-dd'));
+
+        if (newDate >= format(firstDay, 'yyyy-MM-dd') && newDate <= format(lastDay, 'yyyy-MM-dd')) {
             result = true;
         }
 
@@ -262,6 +276,77 @@ const controller = (() => {
         });
     };
 
+    const loadDefaultTodoList = () => {
+        // Project 1 with 3 tasks
+        addNewProject('Learn web developement');
+
+        addNewTask(
+            projectArray.getProjects()[0],
+            'Git Basics',
+            'Get the basic workflow for using Git, which should enhance the understanding and demonstrate why Git is so useful.',
+            '2023-02-06',
+            'high'
+        );
+
+        addNewTask(
+            projectArray.getProjects()[0],
+            'HTML and CSS',
+            'Get a basic overview of HTML, CSS and how they work together. Learn more about responsive design, animation, media quieries.',
+            '2023-02-28',
+            'high'
+        );
+
+        addNewTask(
+            projectArray.getProjects()[0],
+            'Javascript',
+            'Get a basic overview of Javascript, such as variables, operators, functions. Learn about factory functions, modul pattern, javascript modules, API.',
+            '2023-03-30',
+            'medium'
+        );
+
+        // Project2 with 1 task
+        addNewProject('Learn React');
+
+        addNewTask(
+            projectArray.getProjects()[1],
+            'React basics',
+            'Lear React: hook, lifecycle methods etc.',
+            '2023-08-10',
+            'low'
+        );
+
+        // Project3 with 4 tasks
+        addNewProject('Household tasks');
+
+        addNewTask(projectArray.getProjects()[2], 'Car wash', 'Car wash', '2023-02-12', 'low');
+
+        addNewTask(
+            projectArray.getProjects()[2],
+            'Bill payment',
+            'Electric, Gas, Internet.',
+            '2023-02-25',
+            'medium'
+        );
+
+        addNewTask(
+            projectArray.getProjects()[2],
+            'Insurances payment',
+            'House, Car.',
+            '2023-02-12',
+            'high'
+        );
+
+        addNewTask(
+            projectArray.getProjects()[2],
+            'Cut the grass',
+            'Cut the grass.',
+            '2023-03-13',
+            'low'
+        );
+
+        updateProjectList(projectArray.getProjects());
+    };
+
     return {
         toggleNavBar,
         toggleNodeState,
@@ -271,6 +356,7 @@ const controller = (() => {
         updateProjectList,
         removeItemSelection,
         addNewTask,
+        loadDefaultTodoList,
         replaceTask,
         openTaskModal,
         loadTaskInformations,

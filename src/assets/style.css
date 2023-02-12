@@ -245,6 +245,16 @@ main {
     font-size: 1rem;
 }
 
+.project-item p,
+.task-item-left label {
+    text-align: start;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* after 1 line show ... */
+    -webkit-box-orient: vertical;
+}
+
 .nav-item:hover,
 .project-item:hover {
     background-color: var(--item-color-hover);

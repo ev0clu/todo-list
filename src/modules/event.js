@@ -3,6 +3,12 @@ import ui from './ui';
 import { projectArray } from './project';
 
 const event = (() => {
+    // Default Item selection event
+    const setDefaultSelectionEventListener = () => {
+        const selectedDefaultNavInbox = document.getElementById('nav-inbox');
+        selectedDefaultNavInbox.click();
+    };
+
     // Task events
     const setViewTaskModalCloseButtonsEventListener = () => {
         const closeButton = document.querySelector('.btn-close-view-task-modal');
@@ -302,18 +308,6 @@ const event = (() => {
         const newProjectButton = document.getElementById('btn-new-project');
 
         let projects = projectArray.getProjects();
-        const firstProjectItem = projectField.firstChild;
-
-        controller.removeItemSelection(itemList);
-        firstProjectItem.classList.add('item-selected');
-        controller.addTaskHeaderText(projects[0].getProjectName());
-        controller.updateTaskList(projects, firstProjectItem.dataset.projectindex, 'project-item');
-        controller.toggleNewTaskButton(projectArray.getProjects().length);
-
-        setCheckboxEventListener(projects);
-        setViewTaskEventListener(projects);
-        setEditTaskEventListener(projects);
-        setTaskRemoveEventListener(projects, 'project-item');
 
         // Set event listener
         projectItem.forEach((project) => {
@@ -353,6 +347,7 @@ const event = (() => {
                     controller.updateProjectList(projectArray.getProjects());
                     setProjectSelectionEventListener();
                     setProjectRemoveEventListener();
+                    setDefaultSelectionEventListener();
                 } else {
                     controller.toggleNewTaskButton(projectArray.getProjects().length);
 
@@ -469,13 +464,15 @@ const event = (() => {
     };
 
     const initialEventListener = () => {
-        const selectedDefaultItem = document.getElementById('nav-inbox');
-        selectedDefaultItem.classList.add('item-selected');
-        controller.addTaskHeaderText(selectedDefaultItem.lastElementChild.textContent);
         openProjectModalEventListener();
         openTaskModalEventListener();
+
         setNavItemSelectionEventListener();
+        setDefaultSelectionEventListener();
         toggleNavBarEventListener();
+
+        setProjectSelectionEventListener();
+        setProjectRemoveEventListener();
     };
 
     return { initialEventListener };
