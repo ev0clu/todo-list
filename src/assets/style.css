@@ -784,4 +784,16 @@ footer {
         right: 15%;
         top: 5%;
     }
+
+    .task-item {
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+    }
+
+    .task-item-left {
+        justify-content: start;
+    }
+    .task-item-right {
+        grid-column: 1/3;
+    }
 }
