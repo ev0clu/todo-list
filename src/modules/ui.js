@@ -1,5 +1,16 @@
 const ui = (() => {
     // General UI
+    const addEllipsis = (str, maxLength) => {
+        if (str.length <= maxLength) {
+            return str;
+        }
+        const truncatedString = str.substring(0, maxLength);
+        if (truncatedString.lastIndexOf('.') === -1) {
+            return `${truncatedString}...`;
+        }
+        return `${truncatedString}...`;
+    };
+
     const createLabel = (id, text) => {
         const label = document.createElement('label');
         label.htmlFor = id;
@@ -110,7 +121,9 @@ const ui = (() => {
 
         const buttonProjectItemLeft = createSpanButton('project-item-left', 'checklist');
         const projectName = document.createElement('p');
-        projectName.textContent = project.getProjectName();
+
+        projectName.textContent = addEllipsis(project.getProjectName(), 12);
+        // projectName.textContent = project.getProjectName();
         buttonProjectItemLeft.appendChild(projectName);
 
         const buttonProjectItemRight = createSpanButton('project-item-right', 'delete');
@@ -201,7 +214,8 @@ const ui = (() => {
 
         const taskId = `${projectIndex}${taskIndex}${generateID(10)}`;
         const taskCheckbox = createCheckbox(taskId, checkStatus);
-        const taskCheckboxLabel = createLabel(taskId, taskName);
+
+        const taskCheckboxLabel = createLabel(taskId, addEllipsis(taskName, 16));
 
         if (taskCheckbox.checked) {
             taskCheckboxLabel.classList.add('task-done');
@@ -223,7 +237,7 @@ const ui = (() => {
     const replaceTaskItem = (eventTarget, newName, newDueDate, newPriority) => {
         const taskItem = eventTarget;
 
-        taskItem.firstChild.lastChild.textContent = newName;
+        taskItem.firstChild.lastChild.textContent = addEllipsis(newName, 20);
         taskItem.children[1].textContent = newDueDate;
         taskItem.className = '';
         taskItem.className = `task-item priority-${newPriority}`;

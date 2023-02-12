@@ -249,11 +249,15 @@ main {
 .project-item p,
 .task-item-left label {
     text-align: start;
-    overflow: hidden;
-    text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 1; /* after 1 line show ... */
     -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+}
+
+.project-item-left p,
+.task-item-left label {
+    width: 10rem;
 }
 
 .nav-item:hover,
