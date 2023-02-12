@@ -245,6 +245,7 @@ main {
     font-size: 1rem;
 }
 
+#task-content h1,
 .project-item p,
 .task-item-left label {
     text-align: start;
