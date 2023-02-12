@@ -367,19 +367,6 @@ const event = (() => {
                     items[0].classList.add('item-selected');
 
                     controller.addTaskHeaderText(items[0].children[1].textContent);
-
-                    /*let index = -1;
-                    for (let i = 0; i < items.length; i++) {
-                        if (items[i].classList.contains('item-selected')) {
-                            index = i;
-                            break;
-                        }
-                    }
-                    if (index > -1) {
-                        controller.addTaskHeaderText(items[index].children[1].textContent);
-                    } else {
-                        controller.addTaskHeaderText('');
-                    }*/
                 }
             });
         });

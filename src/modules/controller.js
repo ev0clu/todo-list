@@ -1,25 +1,9 @@
-import { format, isWithinInterval } from 'date-fns';
+import { format } from 'date-fns';
 import ui from './ui';
 import { Project, projectArray } from './project';
 import Task from './task';
 
 const controller = (() => {
-    /*const isNextWeek = (newDate) => {
-        const curr = new Date(); // get current date
-        const first = curr.getDate() + 7 - curr.getDay(); // First day is the day of the month - the day of the week
-        const last = first + 7; // last day is the first day + 6
-
-        const firstDay = format(new Date(curr.setDate(first + 1)), 'yyyy-MM-dd');
-        const lastDay = format(new Date(curr.setDate(last) + 1), 'yyyy-MM-dd');
-
-        const result = isWithinInterval(newDate, {
-            start: firstDay,
-            end: lastDay
-        });
-
-        return result;
-    };*/
-
     const toggleNavBar = () => {
         const navBar = document.getElementById('nav-bar');
         const navToggleButton = document.querySelector('.nav-toggle');
@@ -30,7 +14,7 @@ const controller = (() => {
             navToggleButton.textContent = 'menu';
         } else {
             navBar.classList.add('active');
-            navBar.style.width = '20rem';
+            navBar.style.width = '100vw';
             navBar.style.left = '0';
             navToggleButton.textContent = 'close';
         }
@@ -128,7 +112,6 @@ const controller = (() => {
         const navItem = document.querySelectorAll('.nav-item');
 
         const todayDate = format(new Date(), 'yyyy-MM-dd');
-        //const newDate = format(new Date(newDueDate), 'dd-MM-yyyy');
 
         project.setTaskName(taskIndex, newName);
         project.setTaskDescription(taskIndex, newDescription);
