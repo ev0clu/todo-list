@@ -6,18 +6,19 @@ Task organizer web application has built.
 
 ## Features
 
-- 'Todos' are dinamically created
-- Add, remove, modify, change status of 'todos'
-- Local storage feature to store data
+-   Projects can be added and removable
+-   Todo list is dinamically created for each project
+-   Tasks features: add, remove, view, edit, change status
+-   Optimized for laptop, tablet and mobile phone
 
 ## Dependencies
 
-- [date-fns](https://github.com/date-fns/date-fns)
+-   [date-fns](https://github.com/date-fns/date-fns)
 
 ### Developement dependencies
 
-- [Webpack](https://webpack.js.org/)
-- [Style and CSS loader](https://webpack.js.org/guides/asset-management/)
+-   [Webpack](https://webpack.js.org/)
+-   [Style and CSS loader](https://webpack.js.org/guides/asset-management/)
 
 ### Layout
 
