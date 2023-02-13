@@ -1,6 +1,6 @@
 const ui = (() => {
     // General UI
-    const addEllipsis = (str, maxLength) => {
+    const createEllipsisText = (str, maxLength) => {
         if (str.length <= maxLength) {
             return str;
         }
@@ -122,7 +122,7 @@ const ui = (() => {
         const buttonProjectItemLeft = createSpanButton('project-item-left', 'checklist');
         const projectName = document.createElement('p');
 
-        projectName.textContent = addEllipsis(project.getProjectName(), 12);
+        projectName.textContent = createEllipsisText(project.getProjectName(), 10);
         // projectName.textContent = project.getProjectName();
         buttonProjectItemLeft.appendChild(projectName);
 
@@ -134,6 +134,11 @@ const ui = (() => {
     };
 
     // Task UI
+    const createTaskHeaderText = (projectName) => {
+        const taskContent = document.getElementById('task-content');
+        taskContent.children[0].textContent = createEllipsisText(projectName, 20);
+    };
+
     const createViewTaskModal = (name, details, date, prio, status) => {
         const taskViewContainer = document.getElementById('task-view-container');
 
@@ -145,7 +150,7 @@ const ui = (() => {
         const titleDiv = document.createElement('div');
         titleDiv.id = 'task-modal-view-title';
         const title = document.createElement('h1');
-        title.textContent = name;
+        title.textContent = createEllipsisText(name, 13);
         titleDiv.appendChild(title);
 
         const descriptionDiv = document.createElement('div');
@@ -215,7 +220,7 @@ const ui = (() => {
         const taskId = `${projectIndex}${taskIndex}${generateID(10)}`;
         const taskCheckbox = createCheckbox(taskId, checkStatus);
 
-        const taskCheckboxLabel = createLabel(taskId, addEllipsis(taskName, 16));
+        const taskCheckboxLabel = createLabel(taskId, createEllipsisText(taskName, 12));
 
         if (taskCheckbox.checked) {
             taskCheckboxLabel.classList.add('task-done');
@@ -237,7 +242,7 @@ const ui = (() => {
     const replaceTaskItem = (eventTarget, newName, newDueDate, newPriority) => {
         const taskItem = eventTarget;
 
-        taskItem.firstChild.lastChild.textContent = addEllipsis(newName, 20);
+        taskItem.firstChild.lastChild.textContent = createEllipsisText(newName, 10);
         taskItem.children[1].textContent = newDueDate;
         taskItem.className = '';
         taskItem.className = `task-item priority-${newPriority}`;
@@ -344,6 +349,7 @@ const ui = (() => {
         createProjectItem,
         errorMsgTaskExist,
         errorMsgTaskFieldEmpty,
+        createTaskHeaderText,
         createTaskModal,
         createTaskItem,
         replaceTaskItem,

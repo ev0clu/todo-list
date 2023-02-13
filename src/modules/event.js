@@ -320,7 +320,7 @@ const event = (() => {
 
                 const projectIndex = project.parentNode.dataset.projectindex;
 
-                controller.addTaskHeaderText(projects[projectIndex].getProjectName());
+                ui.createTaskHeaderText(projects[projectIndex].getProjectName());
                 controller.updateTaskList(projects, projectIndex, 'project-item');
 
                 setCheckboxEventListener(projects);
@@ -361,7 +361,7 @@ const event = (() => {
                     }
                     items[0].classList.add('item-selected');
 
-                    controller.addTaskHeaderText(items[0].children[1].textContent);
+                    ui.createTaskHeaderText(items[0].children[1].textContent);
                 }
             });
         });
@@ -428,7 +428,7 @@ const event = (() => {
                 controller.removeItemSelection(items);
                 controller.toggleNewTaskButton(-1);
                 item.classList.add('item-selected');
-                controller.addTaskHeaderText(item.lastElementChild.textContent);
+                ui.createTaskHeaderText(item.lastElementChild.textContent);
 
                 const taskField = document.getElementById('task-field');
                 taskField.textContent = '';

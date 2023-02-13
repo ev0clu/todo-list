@@ -208,11 +208,6 @@ const controller = (() => {
         }
     };
 
-    const addTaskHeaderText = (projectName) => {
-        const taskContent = document.getElementById('task-content');
-        taskContent.children[0].textContent = projectName;
-    };
-
     const removeViewTaskModal = () => {
         const taskViewContainer = document.getElementById('task-view-container');
         taskViewContainer.textContent = '';
@@ -365,7 +360,6 @@ const controller = (() => {
         replaceTask,
         openTaskModal,
         loadTaskInformations,
-        addTaskHeaderText,
         updateTaskList,
         removeTaskModal,
         toggleNewTaskButton,
