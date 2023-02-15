@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 import ui from './ui';
 import { Project, projectArray } from './project';
 import Task from './task';
+import storage from './storage';
 
 const controller = (() => {
     // General controllers
@@ -96,23 +97,33 @@ const controller = (() => {
         return priority;
     };
 
-    const toggleCheckboxLabelState = (id, isChecked) => {
+    const toggleCheckboxLabelState = (projects, projectIndex, id, taskIndex, isChecked) => {
         const label = document.querySelector(`label[for="${id}"]`);
 
         if (isChecked) {
             label.classList.add('task-done');
+            projects[projectIndex].toggleTaskStatus(taskIndex, true);
         } else {
             label.classList.remove('task-done');
+            projects[projectIndex].toggleTaskStatus(taskIndex, false);
         }
+        storage.saveLocal(projects[projectIndex].getTasks(), projectIndex, '', 'replace-tasks');
     };
 
-    const addNewTask = (project, title, description, dueDate, priority) => {
+    const addNewTask = (projects, projectIndex, title, description, dueDate, priority) => {
         const newTask = Task(title, description, dueDate, priority);
-        project.addTask(newTask);
+        projects[projectIndex].addTask(newTask);
+        storage.saveLocal(newTask, projectIndex, '', 'add-task');
+    };
+
+    const removeTask = (projects, projectIndex, taskIndex) => {
+        projects[projectIndex].removeTask(taskIndex);
+        storage.saveLocal('', projectIndex, taskIndex, 'remove-task');
     };
 
     const replaceTask = (
         project,
+        projectIndex,
         taskIndex,
         newName,
         newDescription,
@@ -120,10 +131,8 @@ const controller = (() => {
         newPriority,
         eventTarget
     ) => {
-        const navInbox = document.getElementById('nav-inbox');
         const navToday = document.getElementById('nav-today');
         const navWeek = document.getElementById('nav-week');
-        const navItem = document.querySelectorAll('.nav-item');
 
         const todayDate = format(new Date(), 'yyyy-MM-dd');
 
@@ -131,6 +140,8 @@ const controller = (() => {
         project.setTaskDescription(taskIndex, newDescription);
         project.seTaskDueDate(taskIndex, newDueDate);
         project.setTaskPriority(taskIndex, newPriority);
+
+        storage.saveLocal(project.getTasks(), projectIndex, '', 'replace-tasks');
 
         if (navToday.classList.contains('item-selected')) {
             if (todayDate !== newDueDate) {
@@ -245,6 +256,14 @@ const controller = (() => {
     const addNewProject = (projectName) => {
         const newProject = Project(projectName);
         projectArray.addProject(newProject);
+        storage.saveLocal(projectName, '', '', 'add-project');
+    };
+
+    const removeProject = (projectIndex) => {
+        const projectField = document.getElementById('project-field');
+        projectArray.removeProject(projectIndex);
+        projectField.textContent = '';
+        storage.saveLocal('', projectIndex, '', 'remove-project');
     };
 
     const removeProjectModal = () => {
@@ -352,10 +371,12 @@ const controller = (() => {
         toggleNodeState,
         getTaskPriority,
         addNewProject,
+        removeProject,
         removeProjectModal,
         updateProjectList,
         removeItemSelection,
         addNewTask,
+        removeTask,
         loadDefaultTodoList,
         replaceTask,
         openTaskModal,

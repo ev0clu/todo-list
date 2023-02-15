@@ -70,7 +70,7 @@ const projectArray = (() => {
     const isProjectExist = (newProjectName) =>
         getProjects().some((project) => project.getProjectName() === newProjectName);
 
-    return { getProjects, addProject, removeProject, isProjectExist, getProjectsName };
+    return { getProjects, addProject, removeProject, isProjectExist };
 })();
 
 export { Project, projectArray };

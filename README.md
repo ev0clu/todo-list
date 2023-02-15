@@ -10,6 +10,7 @@ Task organizer web application has built.
 -   Todo list is dinamically created for each project
 -   Tasks features: add, remove, view, edit, change status
 -   Optimized for laptop, tablet and mobile phone
+-   Local storage feature to store data
 
 ## Dependencies
 

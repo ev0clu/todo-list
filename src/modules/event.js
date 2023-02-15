@@ -71,6 +71,7 @@ const event = (() => {
 
                     controller.replaceTask(
                         project,
+                        projectIndex,
                         taskIndex,
                         taskTitleInput.value,
                         taskDescriptionInput.value,
@@ -89,6 +90,7 @@ const event = (() => {
 
                 controller.replaceTask(
                     project,
+                    projectIndex,
                     taskIndex,
                     taskTitleInput.value,
                     taskDescriptionInput.value,
@@ -157,11 +159,21 @@ const event = (() => {
                 const projectIndex = checkbox.parentNode.parentNode.dataset.projectindex;
 
                 if (checkbox.checked) {
-                    controller.toggleCheckboxLabelState(checkbox.id, true);
-                    projects[projectIndex].toggleTaskStatus(taskIndex, true);
+                    controller.toggleCheckboxLabelState(
+                        projects,
+                        projectIndex,
+                        checkbox.id,
+                        taskIndex,
+                        true
+                    );
                 } else {
-                    controller.toggleCheckboxLabelState(checkbox.id, false);
-                    projects[projectIndex].toggleTaskStatus(taskIndex, false);
+                    controller.toggleCheckboxLabelState(
+                        projects,
+                        projectIndex,
+                        checkbox.id,
+                        taskIndex,
+                        false
+                    );
                 }
             });
         });
@@ -179,7 +191,7 @@ const event = (() => {
 
                 controller.removeTaskModal();
 
-                projects[projectIndex].removeTask(taskIndex);
+                controller.removeTask(projects, projectIndex, taskIndex);
                 taskField.textContent = '';
 
                 if (
@@ -255,7 +267,8 @@ const event = (() => {
                         const taskPriorityInput = controller.getTaskPriority(taskPriorityInputs);
 
                         controller.addNewTask(
-                            project,
+                            projects,
+                            projectIndex,
                             taskTitleInput.value,
                             taskDescriptionInput.value,
                             taskDueDateInput.value,
@@ -340,8 +353,7 @@ const event = (() => {
         projectRemoveButton.forEach((project) => {
             const items = document.querySelectorAll('li');
             project.addEventListener('click', () => {
-                projectArray.removeProject(project.parentNode.dataset.projectindex);
-                projectField.textContent = '';
+                controller.removeProject(project.parentNode.dataset.projectindex);
 
                 if (projectArray.getProjects().length > 0) {
                     controller.updateProjectList(projectArray.getProjects());
