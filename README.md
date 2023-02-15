@@ -23,4 +23,6 @@ Task organizer web application has built.
 
 ### Layout
 
-![layout picture](https://github.com/ev0clu/todo-list/blob/main/layout.png?raw=true)
+![layout1 picture](https://github.com/ev0clu/todo-list/blob/main/layout1.png?raw=true)
+
+![layout2 picture](https://github.com/ev0clu/todo-list/blob/main/layout2.png?raw=true)
