@@ -1,16 +1,5 @@
 const ui = (() => {
     // General UI
-    /*const createEllipsisText = (str, maxLength) => {
-        if (str.length <= maxLength) {
-            return str;
-        }
-        const truncatedString = str.substring(0, maxLength);
-        if (truncatedString.lastIndexOf('.') === -1) {
-            return `${truncatedString}...`;
-        }
-        return `${truncatedString}...`;
-    };*/
-
     const createLabel = (id, text) => {
         const label = document.createElement('label');
         label.htmlFor = id;
@@ -28,6 +17,17 @@ const ui = (() => {
         input.required = isRequired;
 
         return input;
+    };
+
+    const createCheckbox = (id, status) => {
+        const taskCheckbox = document.createElement('input');
+        taskCheckbox.name = id;
+        taskCheckbox.id = id;
+        taskCheckbox.type = 'checkbox';
+        taskCheckbox.checked = status;
+        taskCheckbox.classList.add('task-checkbox');
+
+        return taskCheckbox;
     };
 
     const createTextArea = (name, id, rows, cols, resize) => {
@@ -62,17 +62,6 @@ const ui = (() => {
         cancelButton.textContent = 'Cancel';
 
         return cancelButton;
-    };
-
-    const createCheckbox = (id, status) => {
-        const taskCheckbox = document.createElement('input');
-        taskCheckbox.name = id;
-        taskCheckbox.id = id;
-        taskCheckbox.type = 'checkbox';
-        taskCheckbox.checked = status;
-        taskCheckbox.classList.add('task-checkbox');
-
-        return taskCheckbox;
     };
 
     const createSpanButton = (buttonName, buttonType) => {
@@ -121,9 +110,7 @@ const ui = (() => {
 
         const buttonProjectItemLeft = createSpanButton('project-item-left', 'checklist');
         const projectName = document.createElement('p');
-
         projectName.textContent = project.getProjectName();
-        // projectName.textContent = project.getProjectName();
         buttonProjectItemLeft.appendChild(projectName);
 
         const buttonProjectItemRight = createSpanButton('project-item-right', 'delete');
@@ -134,60 +121,6 @@ const ui = (() => {
     };
 
     // Task UI
-    const createTaskHeaderText = (projectName) => {
-        const taskContent = document.getElementById('task-content');
-        taskContent.children[0].textContent = projectName;
-    };
-
-    const createViewTaskModal = (name, details, date, prio, status) => {
-        const taskViewContainer = document.getElementById('task-view-container');
-
-        const taskViewDiv = document.createElement('div');
-        taskViewDiv.id = 'task-modal-view';
-
-        const taskInfo = document.createElement('div');
-        taskInfo.id = 'task-informations';
-        const titleDiv = document.createElement('div');
-        titleDiv.id = 'task-modal-view-title';
-        const title = document.createElement('h1');
-        title.textContent = name;
-        titleDiv.appendChild(title);
-
-        const descriptionDiv = document.createElement('div');
-        descriptionDiv.id = 'task-modal-view-description';
-        const descriptionTitle = document.createElement('p');
-        descriptionTitle.textContent = 'Description:';
-        const description = document.createElement('p');
-        description.textContent = details;
-        descriptionDiv.append(descriptionTitle, description);
-
-        const dueDateDiv = document.createElement('div');
-        dueDateDiv.id = 'task-modal-view-duedate';
-        const dueDateTitle = document.createElement('p');
-        dueDateTitle.textContent = 'Due Date:';
-        const dueDate = document.createElement('p');
-        dueDate.textContent = date;
-        dueDateDiv.append(dueDateTitle, dueDate);
-
-        const priorityDiv = document.createElement('div');
-        priorityDiv.id = 'task-modal-view-priority';
-        const priorityTitle = document.createElement('p');
-        priorityTitle.textContent = 'Priority:';
-        const priority = document.createElement('p');
-        priority.textContent = prio;
-        priorityDiv.append(priorityTitle, priority);
-
-        taskInfo.appendChild(descriptionDiv);
-        taskInfo.appendChild(dueDateDiv);
-        taskInfo.appendChild(priorityDiv);
-
-        taskViewDiv.appendChild(createSpanButton('btn-close-view-task-modal', 'cancel'));
-        taskViewDiv.appendChild(titleDiv);
-        taskViewDiv.appendChild(taskInfo);
-
-        taskViewContainer.appendChild(taskViewDiv);
-    };
-
     const generateID = (length) => {
         let result = '';
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -199,53 +132,19 @@ const ui = (() => {
         }
         return result;
     };
-
-    const createTaskItem = (checkStatus, taskName, projectIndex, taskIndex, dueDate, priority) => {
-        const taskItem = document.createElement('li');
-        taskItem.classList.add('task-item');
-        taskItem.setAttribute('data-projectindex', `${projectIndex}`);
-        taskItem.setAttribute('data-taskindex', `${taskIndex}`);
-        taskItem.classList.add(`priority-${priority}`);
-
-        const taskItemLeft = document.createElement('div');
-        taskItemLeft.classList.add('task-item-left');
-
-        const taskItemMiddle = document.createElement('div');
-        taskItemMiddle.classList.add('task-item-middle');
-        taskItemMiddle.textContent = dueDate;
-
-        const taskItemRight = document.createElement('div');
-        taskItemRight.classList.add('task-item-right');
-
-        const taskId = `${projectIndex}${taskIndex}${generateID(10)}`;
-        const taskCheckbox = createCheckbox(taskId, checkStatus);
-
-        const taskCheckboxLabel = createLabel(taskId, taskName);
-
-        if (taskCheckbox.checked) {
-            taskCheckboxLabel.classList.add('task-done');
-        }
-
-        taskItemLeft.append(taskCheckbox, taskCheckboxLabel);
-
-        taskItemRight.append(
-            createSpanButton('btn-task-view', 'visibility'),
-            createSpanButton('btn-task-edit', 'edit'),
-            createSpanButton('btn-task-remove', 'delete')
-        );
-
-        taskItem.append(taskItemLeft, taskItemMiddle, taskItemRight);
-
-        return taskItem;
+    const errorMsgTaskExist = () => {
+        const errorMsg = document.getElementById('task-warning');
+        errorMsg.textContent = 'Task already exist';
     };
 
-    const replaceTaskItem = (eventTarget, newName, newDueDate, newPriority) => {
-        const taskItem = eventTarget;
+    const errorMsgTaskFieldEmpty = () => {
+        const errorMsg = document.getElementById('task-warning');
+        errorMsg.textContent = 'Task name is missing';
+    };
 
-        taskItem.firstChild.lastChild.textContent = newName;
-        taskItem.children[1].textContent = newDueDate;
-        taskItem.className = '';
-        taskItem.className = `task-item priority-${newPriority}`;
+    const createTaskHeaderText = (projectName) => {
+        const taskContent = document.getElementById('task-content');
+        taskContent.children[0].textContent = projectName;
     };
 
     const createTaskModal = () => {
@@ -332,14 +231,101 @@ const ui = (() => {
         taskModalContainer.appendChild(taskModalDiv);
     };
 
-    const errorMsgTaskExist = () => {
-        const errorMsg = document.getElementById('task-warning');
-        errorMsg.textContent = 'Task already exist';
+    const createTaskItem = (checkStatus, taskName, projectIndex, taskIndex, dueDate, priority) => {
+        const taskItem = document.createElement('li');
+        taskItem.classList.add('task-item');
+        taskItem.setAttribute('data-projectindex', `${projectIndex}`);
+        taskItem.setAttribute('data-taskindex', `${taskIndex}`);
+        taskItem.classList.add(`priority-${priority}`);
+
+        const taskItemLeft = document.createElement('div');
+        taskItemLeft.classList.add('task-item-left');
+
+        const taskItemMiddle = document.createElement('div');
+        taskItemMiddle.classList.add('task-item-middle');
+        taskItemMiddle.textContent = dueDate;
+
+        const taskItemRight = document.createElement('div');
+        taskItemRight.classList.add('task-item-right');
+
+        const taskId = `${projectIndex}${taskIndex}${generateID(10)}`;
+        const taskCheckbox = createCheckbox(taskId, checkStatus);
+
+        const taskCheckboxLabel = createLabel(taskId, taskName);
+
+        if (taskCheckbox.checked) {
+            taskCheckboxLabel.classList.add('task-done');
+        }
+
+        taskItemLeft.append(taskCheckbox, taskCheckboxLabel);
+
+        taskItemRight.append(
+            createSpanButton('btn-task-view', 'visibility'),
+            createSpanButton('btn-task-edit', 'edit'),
+            createSpanButton('btn-task-remove', 'delete')
+        );
+
+        taskItem.append(taskItemLeft, taskItemMiddle, taskItemRight);
+
+        return taskItem;
     };
 
-    const errorMsgTaskFieldEmpty = () => {
-        const errorMsg = document.getElementById('task-warning');
-        errorMsg.textContent = 'Task name is missing';
+    const replaceTaskItem = (eventTarget, newName, newDueDate, newPriority) => {
+        const taskItem = eventTarget;
+
+        taskItem.firstChild.lastChild.textContent = newName;
+        taskItem.children[1].textContent = newDueDate;
+        taskItem.className = '';
+        taskItem.className = `task-item priority-${newPriority}`;
+    };
+
+    const createViewTaskModal = (name, details, date, prio, status) => {
+        const taskViewContainer = document.getElementById('task-view-container');
+
+        const taskViewDiv = document.createElement('div');
+        taskViewDiv.id = 'task-modal-view';
+
+        const taskInfo = document.createElement('div');
+        taskInfo.id = 'task-informations';
+        const titleDiv = document.createElement('div');
+        titleDiv.id = 'task-modal-view-title';
+        const title = document.createElement('h1');
+        title.textContent = name;
+        titleDiv.appendChild(title);
+
+        const descriptionDiv = document.createElement('div');
+        descriptionDiv.id = 'task-modal-view-description';
+        const descriptionTitle = document.createElement('p');
+        descriptionTitle.textContent = 'Description:';
+        const description = document.createElement('p');
+        description.textContent = details;
+        descriptionDiv.append(descriptionTitle, description);
+
+        const dueDateDiv = document.createElement('div');
+        dueDateDiv.id = 'task-modal-view-duedate';
+        const dueDateTitle = document.createElement('p');
+        dueDateTitle.textContent = 'Due Date:';
+        const dueDate = document.createElement('p');
+        dueDate.textContent = date;
+        dueDateDiv.append(dueDateTitle, dueDate);
+
+        const priorityDiv = document.createElement('div');
+        priorityDiv.id = 'task-modal-view-priority';
+        const priorityTitle = document.createElement('p');
+        priorityTitle.textContent = 'Priority:';
+        const priority = document.createElement('p');
+        priority.textContent = prio;
+        priorityDiv.append(priorityTitle, priority);
+
+        taskInfo.appendChild(descriptionDiv);
+        taskInfo.appendChild(dueDateDiv);
+        taskInfo.appendChild(priorityDiv);
+
+        taskViewDiv.appendChild(createSpanButton('btn-close-view-task-modal', 'cancel'));
+        taskViewDiv.appendChild(titleDiv);
+        taskViewDiv.appendChild(taskInfo);
+
+        taskViewContainer.appendChild(taskViewDiv);
     };
 
     return {

@@ -259,6 +259,7 @@ const event = (() => {
                     const projectIndex = projectList[i].dataset.projectindex;
                     const projects = projectArray.getProjects();
                     const project = projects[projectIndex];
+
                     if (project.isTaskExist(taskTitleInput.value)) {
                         ui.errorMsgTaskExist();
                     } else if (taskTitleInput.value.match(/^ *$/) !== null) {
@@ -317,19 +318,16 @@ const event = (() => {
         // Select the newly added project by default
         const itemList = document.querySelectorAll('li');
         const projectItem = document.querySelectorAll('.project-item-left');
-        const projectField = document.getElementById('project-field');
         const newProjectButton = document.getElementById('btn-new-project');
-
-        let projects = projectArray.getProjects();
 
         // Set event listener
         projectItem.forEach((project) => {
             project.addEventListener('click', () => {
+                const projects = projectArray.getProjects();
                 newProjectButton.style.display = 'flex';
                 controller.removeItemSelection(itemList);
                 controller.toggleNewTaskButton(projects.length);
                 project.parentNode.classList.add('item-selected');
-                projects = projectArray.getProjects();
 
                 const projectIndex = project.parentNode.dataset.projectindex;
 
@@ -346,7 +344,6 @@ const event = (() => {
 
     const setProjectRemoveEventListener = () => {
         const projectRemoveButton = document.querySelectorAll('.project-item-right');
-        const projectField = document.getElementById('project-field');
         const taskField = document.getElementById('task-field');
 
         // Set event listener
@@ -354,15 +351,15 @@ const event = (() => {
             const items = document.querySelectorAll('li');
             project.addEventListener('click', () => {
                 controller.removeProject(project.parentNode.dataset.projectindex);
+                const projects = projectArray.getProjects();
 
-                if (projectArray.getProjects().length > 0) {
-                    controller.updateProjectList(projectArray.getProjects());
+                if (projects.length > 0) {
+                    controller.updateProjectList(projects);
                     setProjectSelectionEventListener();
                     setProjectRemoveEventListener();
                     setDefaultSelectionEventListener();
                 } else {
-                    controller.toggleNewTaskButton(projectArray.getProjects().length);
-
+                    controller.toggleNewTaskButton(projects.length);
                     taskField.textContent = '';
 
                     for (let i = 0; i < items.length; i++) {
@@ -433,16 +430,16 @@ const event = (() => {
         // Set event listener
         navList.forEach((item) => {
             item.addEventListener('click', () => {
-                const projects = projectArray.getProjects();
                 const items = document.querySelectorAll('li');
+                const taskField = document.getElementById('task-field');
 
+                const projects = projectArray.getProjects();
                 controller.removeProjectModal();
                 controller.removeItemSelection(items);
                 controller.toggleNewTaskButton(-1);
                 item.classList.add('item-selected');
                 ui.createTaskHeaderText(item.lastElementChild.textContent);
 
-                const taskField = document.getElementById('task-field');
                 taskField.textContent = '';
 
                 if (item.id === 'nav-inbox') {
@@ -470,6 +467,7 @@ const event = (() => {
 
     const toggleNavBarEventListener = () => {
         const navToggleButton = document.getElementById('btn-nav-toggle');
+
         navToggleButton.addEventListener('click', () => {
             controller.toggleNavBar();
         });

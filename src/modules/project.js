@@ -62,10 +62,6 @@ const projectArray = (() => {
     const getProjects = () => projects;
     const addProject = (project) => getProjects().push(project);
 
-    // Only for developement
-    const getProjectsName = () => getProjects().map((project) => project.getProjectName());
-    // -- end --
-
     const removeProject = (index) => getProjects().splice(index, 1);
     const isProjectExist = (newProjectName) =>
         getProjects().some((project) => project.getProjectName() === newProjectName);

@@ -22,18 +22,6 @@ const ProjectData = (name) => {
 };
 
 const storage = (() => {
-    /*const storageData = [
-        {
-            projectData: {
-                projectName: '',
-                tasks: []
-            },
-            projectData2: {
-                projectName: '',
-                tasks: []
-            }
-        }
-    ];*/
     const storageData = [];
 
     // Save to Local Storage
@@ -53,7 +41,6 @@ const storage = (() => {
             storageData[projectIndex].replaceTaskArray = tasks;
         }
 
-        console.log('save: ', storageData);
         localStorage.setItem('Projects', JSON.stringify(storageData));
     };
 
@@ -61,9 +48,8 @@ const storage = (() => {
     const restoreLocal = () => {
         let isLocalStorageAvailable = false;
         let restoreData = JSON.parse(localStorage.getItem('Projects'));
-        //console.log('load: ', restoreData);
         if (restoreData == null) {
-            // If localstorage is empty, add default books into the library
+            // If localstorage is empty, add default projects with tasks into the array
             restoreData = [];
         } else {
             isLocalStorageAvailable = true;

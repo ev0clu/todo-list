@@ -41,10 +41,6 @@ const controller = (() => {
 
         lastDay.setDate(lastDay.getDate() + 6);
 
-        //firstDay = format(firstDay, 'yyyy-MM-dd');
-        //lastDay = format(lastDay, 'yyyy-MM-dd');
-        //console.log(format(firstDay, 'yyyy-MM-dd'), format(lastDay, 'yyyy-MM-dd'));
-
         if (newDate >= format(firstDay, 'yyyy-MM-dd') && newDate <= format(lastDay, 'yyyy-MM-dd')) {
             result = true;
         }
@@ -62,7 +58,50 @@ const controller = (() => {
         footer.classList.toggle('inactive');
     };
 
-    // Task controller
+    // Project controllers
+    const addNewProject = (projectName) => {
+        const newProject = Project(projectName);
+        projectArray.addProject(newProject);
+        storage.saveLocal(projectName, '', '', 'add-project');
+    };
+
+    const removeProject = (projectIndex) => {
+        const projectField = document.getElementById('project-field');
+        projectArray.removeProject(projectIndex);
+        projectField.textContent = '';
+        storage.saveLocal('', projectIndex, '', 'remove-project');
+    };
+
+    const removeProjectModal = () => {
+        const projectModalContainer = document.getElementById('project-modal-container');
+        const newProjectButton = document.getElementById('btn-new-project');
+        projectModalContainer.textContent = '';
+        newProjectButton.style.display = 'flex';
+    };
+
+    const openTaskModal = () => {
+        removeProjectModal();
+        ui.createTaskModal();
+    };
+
+    const updateProjectList = (projectList) => {
+        const projectField = document.getElementById('project-field');
+        projectField.textContent = '';
+
+        let index = 0;
+        projectList.forEach((project) => {
+            projectField.appendChild(ui.createProjectItem(project, index));
+            index += 1;
+        });
+    };
+
+    const removeItemSelection = (itemList) => {
+        itemList.forEach((item) => {
+            item.classList.remove('item-selected');
+        });
+    };
+
+    // Task controllers
     const getTaskPriorityRadioButton = (taskPriorityList, taskPriority) => {
         let radioButton = '';
         for (let i = 0; i < taskPriorityList.length; i++) {
@@ -95,6 +134,22 @@ const controller = (() => {
             }
         }
         return priority;
+    };
+
+    const toggleNewTaskButton = (isProject) => {
+        const newTaskButton = document.getElementById('btn-new-task');
+        const itemSelected = document.querySelectorAll('li');
+
+        if (
+            isProject > 0 &&
+            !itemSelected[0].classList.contains('item-selected') &&
+            !itemSelected[1].classList.contains('item-selected') &&
+            !itemSelected[2].classList.contains('item-selected')
+        ) {
+            newTaskButton.style.display = 'flex';
+        } else if (isProject <= 0) {
+            newTaskButton.style.display = 'none';
+        }
     };
 
     const toggleCheckboxLabelState = (projects, projectIndex, id, taskIndex, isChecked) => {
@@ -237,64 +292,7 @@ const controller = (() => {
         selectedRadioButton.checked = true;
     };
 
-    const toggleNewTaskButton = (isProject) => {
-        const newTaskButton = document.getElementById('btn-new-task');
-        const itemSelected = document.querySelectorAll('li');
-        if (
-            isProject > 0 &&
-            !itemSelected[0].classList.contains('item-selected') &&
-            !itemSelected[1].classList.contains('item-selected') &&
-            !itemSelected[2].classList.contains('item-selected')
-        ) {
-            newTaskButton.style.display = 'flex';
-        } else if (isProject <= 0) {
-            newTaskButton.style.display = 'none';
-        }
-    };
-
-    // Project controller
-    const addNewProject = (projectName) => {
-        const newProject = Project(projectName);
-        projectArray.addProject(newProject);
-        storage.saveLocal(projectName, '', '', 'add-project');
-    };
-
-    const removeProject = (projectIndex) => {
-        const projectField = document.getElementById('project-field');
-        projectArray.removeProject(projectIndex);
-        projectField.textContent = '';
-        storage.saveLocal('', projectIndex, '', 'remove-project');
-    };
-
-    const removeProjectModal = () => {
-        const projectModalContainer = document.getElementById('project-modal-container');
-        const newProjectButton = document.getElementById('btn-new-project');
-        projectModalContainer.textContent = '';
-        newProjectButton.style.display = 'flex';
-    };
-
-    const openTaskModal = () => {
-        removeProjectModal();
-        ui.createTaskModal();
-    };
-
-    const updateProjectList = (projectList) => {
-        const projectField = document.getElementById('project-field');
-        projectField.textContent = '';
-
-        let index = 0;
-        projectList.forEach((project) => {
-            projectField.appendChild(ui.createProjectItem(project, index));
-            index += 1;
-        });
-    };
-
-    const removeItemSelection = (itemList) => {
-        itemList.forEach((item) => {
-            item.classList.remove('item-selected');
-        });
-    };
-
+    // Default Todo list loader contoller
     const loadDefaultTodoList = () => {
         // Project 1 with 3 tasks
         addNewProject('Learn web developement');
@@ -376,23 +374,23 @@ const controller = (() => {
     return {
         toggleNavBar,
         toggleNodeState,
-        getTaskPriority,
         addNewProject,
         removeProject,
         removeProjectModal,
+        openTaskModal,
         updateProjectList,
         removeItemSelection,
+        getTaskPriority,
+        toggleNewTaskButton,
+        toggleCheckboxLabelState,
         addNewTask,
         removeTask,
-        loadDefaultTodoList,
         replaceTask,
-        openTaskModal,
-        loadTaskInformations,
-        updateTaskList,
         removeTaskModal,
-        toggleNewTaskButton,
+        updateTaskList,
         removeViewTaskModal,
-        toggleCheckboxLabelState
+        loadTaskInformations,
+        loadDefaultTodoList
     };
 })();
 
