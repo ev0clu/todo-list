@@ -59,12 +59,14 @@ const storage = (() => {
 
     // Restore from Local Storage
     const restoreLocal = () => {
+        let isLocalStorageAvailable = false;
         let restoreData = JSON.parse(localStorage.getItem('Projects'));
-        console.log('load: ', restoreData);
+        //console.log('load: ', restoreData);
         if (restoreData == null) {
             // If localstorage is empty, add default books into the library
             restoreData = [];
         } else {
+            isLocalStorageAvailable = true;
             for (let i = 0; i < restoreData.length; i++) {
                 const newStorageProject = ProjectData(restoreData[i].projectName);
                 storageData.push(newStorageProject);
@@ -89,6 +91,7 @@ const storage = (() => {
                 }
             }
         }
+        return isLocalStorageAvailable;
     };
 
     return { saveLocal, restoreLocal };

@@ -57,7 +57,7 @@ const controller = (() => {
         const main = document.querySelector('main');
         const footer = document.querySelector('footer');
 
-        header.classList.toggle('inactive');
+        header.classList.toggle('inactive-header');
         main.classList.toggle('inactive');
         footer.classList.toggle('inactive');
     };
@@ -300,7 +300,8 @@ const controller = (() => {
         addNewProject('Learn web developement');
 
         addNewTask(
-            projectArray.getProjects()[0],
+            projectArray.getProjects(),
+            0,
             'Git Basics',
             'Get the basic workflow for using Git, which should enhance the understanding and demonstrate why Git is so useful.',
             '2023-02-06',
@@ -308,7 +309,8 @@ const controller = (() => {
         );
 
         addNewTask(
-            projectArray.getProjects()[0],
+            projectArray.getProjects(),
+            0,
             'HTML and CSS',
             'Get a basic overview of HTML, CSS and how they work together. Learn more about responsive design, animation, media quieries.',
             '2023-02-28',
@@ -316,7 +318,8 @@ const controller = (() => {
         );
 
         addNewTask(
-            projectArray.getProjects()[0],
+            projectArray.getProjects(),
+            0,
             'Javascript',
             'Get a basic overview of Javascript, such as variables, operators, functions. Learn about factory functions, modul pattern, javascript modules, API.',
             '2023-03-30',
@@ -327,7 +330,8 @@ const controller = (() => {
         addNewProject('Learn React');
 
         addNewTask(
-            projectArray.getProjects()[1],
+            projectArray.getProjects(),
+            1,
             'React basics',
             'Lear React: hook, lifecycle methods etc.',
             '2023-08-10',
@@ -337,10 +341,11 @@ const controller = (() => {
         // Project3 with 4 tasks
         addNewProject('Household tasks');
 
-        addNewTask(projectArray.getProjects()[2], 'Car wash', 'Car wash', '2023-02-12', 'low');
+        addNewTask(projectArray.getProjects(), 2, 'Car wash', 'Car wash', '2023-02-12', 'low');
 
         addNewTask(
-            projectArray.getProjects()[2],
+            projectArray.getProjects(),
+            2,
             'Bill payment',
             'Electric, Gas, Internet.',
             '2023-02-25',
@@ -348,7 +353,8 @@ const controller = (() => {
         );
 
         addNewTask(
-            projectArray.getProjects()[2],
+            projectArray.getProjects(),
+            2,
             'Insurances payment',
             'House, Car.',
             '2023-02-12',
@@ -356,7 +362,8 @@ const controller = (() => {
         );
 
         addNewTask(
-            projectArray.getProjects()[2],
+            projectArray.getProjects(),
+            2,
             'Cut the grass',
             'Cut the grass.',
             '2023-03-13',

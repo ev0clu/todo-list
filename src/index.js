@@ -3,6 +3,10 @@ import event from './modules/event';
 import controller from './modules/controller';
 import storage from './modules/storage';
 
-//controller.loadDefaultTodoList();
-storage.restoreLocal();
+const isLocalStorageAvailable = storage.restoreLocal();
+
+if (!isLocalStorageAvailable) {
+    controller.loadDefaultTodoList();
+}
+
 event.initialEventListener();
