@@ -247,7 +247,8 @@ main {
 
 #task-content h1,
 .project-item p,
-.task-item-left label {
+.task-item-left label,
+#task-modal-view-title h1 {
     text-align: start;
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -256,9 +257,17 @@ main {
     text-overflow: ellipsis;
 }
 
-.project-item-left p,
-.task-item-left label {
+#task-modal-view-title h1 {
+    overflow: scroll;
+    height: 3rem;
+}
+
+.project-item-left p {
     width: 10rem;
+}
+
+.task-item-left label {
+    width: 35rem;
 }
 
 .nav-item:hover,
@@ -637,8 +646,8 @@ main {
     align-items: center;
     justify-content: center;
     position: absolute;
-    right: 26%;
-    top: 5%;
+    right: 25%;
+    top: 2%;
 }
 
 .btn-close-view-task-modal .material-symbols-outlined {
@@ -701,6 +710,32 @@ footer {
 }
 
 /* MEDIA QUERIES */
+
+@media (max-width: 1200px) {
+    #task-modal-container,
+    #task-view-container {
+        top: 45%;
+        left: 69%;
+    }
+
+    .task-item {
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+    }
+
+    .task-item-left {
+        justify-content: start;
+    }
+    .task-item-right {
+        grid-column: 1/3;
+    }
+    .task-item-left label {
+        width: 10rem;
+    }
+    #task-modal-view-title h1 {
+        width: 10rem;
+    }
+}
 @media (max-width: 640px) {
     #btn-nav-toggle {
         display: flex;
@@ -805,5 +840,11 @@ footer {
     }
     .task-item-right {
         grid-column: 1/3;
+    }
+    .task-item-left label {
+        width: 10rem;
+    }
+    #task-modal-view-title h1 {
+        width: 10rem;
     }
 }
