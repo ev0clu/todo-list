@@ -1,6 +1,6 @@
 const ui = (() => {
     // General UI
-    const createEllipsisText = (str, maxLength) => {
+    /*const createEllipsisText = (str, maxLength) => {
         if (str.length <= maxLength) {
             return str;
         }
@@ -9,7 +9,7 @@ const ui = (() => {
             return `${truncatedString}...`;
         }
         return `${truncatedString}...`;
-    };
+    };*/
 
     const createLabel = (id, text) => {
         const label = document.createElement('label');
@@ -122,7 +122,7 @@ const ui = (() => {
         const buttonProjectItemLeft = createSpanButton('project-item-left', 'checklist');
         const projectName = document.createElement('p');
 
-        projectName.textContent = createEllipsisText(project.getProjectName(), 10);
+        projectName.textContent = project.getProjectName();
         // projectName.textContent = project.getProjectName();
         buttonProjectItemLeft.appendChild(projectName);
 
@@ -136,7 +136,7 @@ const ui = (() => {
     // Task UI
     const createTaskHeaderText = (projectName) => {
         const taskContent = document.getElementById('task-content');
-        taskContent.children[0].textContent = createEllipsisText(projectName, 20);
+        taskContent.children[0].textContent = projectName;
     };
 
     const createViewTaskModal = (name, details, date, prio, status) => {
@@ -150,7 +150,7 @@ const ui = (() => {
         const titleDiv = document.createElement('div');
         titleDiv.id = 'task-modal-view-title';
         const title = document.createElement('h1');
-        title.textContent = createEllipsisText(name, 13);
+        title.textContent = name;
         titleDiv.appendChild(title);
 
         const descriptionDiv = document.createElement('div');
@@ -220,7 +220,7 @@ const ui = (() => {
         const taskId = `${projectIndex}${taskIndex}${generateID(10)}`;
         const taskCheckbox = createCheckbox(taskId, checkStatus);
 
-        const taskCheckboxLabel = createLabel(taskId, createEllipsisText(taskName, 12));
+        const taskCheckboxLabel = createLabel(taskId, taskName);
 
         if (taskCheckbox.checked) {
             taskCheckboxLabel.classList.add('task-done');
@@ -242,7 +242,7 @@ const ui = (() => {
     const replaceTaskItem = (eventTarget, newName, newDueDate, newPriority) => {
         const taskItem = eventTarget;
 
-        taskItem.firstChild.lastChild.textContent = createEllipsisText(newName, 10);
+        taskItem.firstChild.lastChild.textContent = newName;
         taskItem.children[1].textContent = newDueDate;
         taskItem.className = '';
         taskItem.className = `task-item priority-${newPriority}`;
